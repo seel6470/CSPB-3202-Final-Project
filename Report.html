@@ -15559,7 +15559,7 @@ ActorCriticCnnPolicy(
 <p>While this simplification may make it harder for the agent to avoid enemies, it is more in alignment with the heuristic agent we used as a baseline and should hopefully allow the agent to make better progress.</p>
 <p>With these revisions, the agent was able to complete the level and even get a bit farther after 600,000 training steps, without taking any deaths (per the harsh penalty implemented in the revised reward function).</p>
 <p><img src="https://raw.githubusercontent.com/seel6470/CSPB-3202-Final-Project/main/images/ppo_final.gif" alt="image" /></p>
-<p>This reward function seems to work as intedned and the model learns with quite a bit of stability. Given enough iterations, I believe the model would continue to improve and progress farther into the game.</p>
+<p>This reward function seems to work as intended and the model learns with quite a bit of stability. Given enough iterations, I believe the model would continue to improve and progress farther into the game.</p>
 
 </div>
 </div>
@@ -15598,7 +15598,7 @@ ActorCriticCnnPolicy(
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
 <p>We can begin by creating the same wrappers as before. Initially, I used these wrappers for the Q-Learning model and applied them to the PPO model after the fact. We again skip 4 frames, rescale and reduce the images to gray scale while stacking 4 frames. I am also including the previous reward wrapper used in the PPO model before applying all these wrappers together in the function <code>apply_wrappers</code> that returns the environment utilizing all of the environment wrappers.</p>
-<p>One note is that the following algorithm requires gym version 0.24.0 as the returns of the reset function need to be a single value, as opposed to the tuple returned in later versions. Overriding the reset function does not work, as several of the necessary wraooers and Python modules are not compatible with the newer versions of gym. If you are attempting to run this cell, you will receive an error unless you run <code>pip install gym==0.24.0</code> first.</p>
+<p>One note is that the following algorithm requires gym version 0.24.0 as the returns of the reset function need to be a single value, as opposed to the tuple returned in later versions. Overriding the reset function does not work, as several of the necessary wrappers and Python modules are not compatible with the newer versions of gym. If you are attempting to run this cell, you will receive an error unless you run <code>pip install gym==0.24.0</code> first.</p>
 
 </div>
 </div>
@@ -16172,7 +16172,7 @@ Max Stage: 1
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<p><img src="images/q_27000.gif" alt="image" /></p>
+<p><img src="https://raw.githubusercontent.com/seel6470/CSPB-3202-Final-Project/main/images/q_27000.gif" alt="image" /></p>
 <p>WIth only 27,000 training episodes, the Q Learning algorithm is able to take advantage of the height reward and is clearing the tall pipes and the first gap. Given enough iterations, I believe this algorithm would show similar, if not better results than our PPO algorithm. However, it took almost 24 hours to just get this number of iterations when I could get 20 times the number of episodes with the PPO algorithm.</p>
 <p>The main difference between PPO and Q-Learning, besides the processing time, is in their approach to policy optimization and exploration. PPO is a policy-based method that directly optimizes actions, mapping the best action to take for any given game state. Q-Learning is value-based, focusing on learning state-action values. Because of this, PPO is better at determining continuous action spaces, whereas Q-Learning is better suited for discrete action spaces. Limiting the number of chosen actions to only those that allow Mario to progress (right + B + A and right + B) may have worked well for both models given it creates a more discrete action space.</p>
 <p>My initial PPO algorithm was more prone to exploitation, which caused me to fine-tune the environment's reward value function and incorporate an entropy coefficient to encourage the agent to explore. In the same way, Q-Learning uses an epsilon greedy function that chooses a random action some of the time, taking the the action with the highest q-value the rest of the time. Using the more balanced reward function and set of actions taken from tuning the PPO algorithm assisted in stabilizing the Q-Learning model without as much trial and error. This was significant, especially given the the costly time to process the Q-Learning model as opposed to the PPO model.</p>
