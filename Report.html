@@ -7553,12 +7553,6 @@ a.anchor-link {
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
 <p><a id="short-overview"></a></p>
 <h2 id="Short-Overview">Short Overview<a class="anchor-link" href="#Short-Overview">¶</a></h2><p><em>short overview of what your project is about (e.g. you're building /testing certain RL models in certain environments; yes you can test your algorithm in more than 1 environment if your goal is to test an algorithm(s) performances in different settings)</em></p>
-<ol>
-<li><p>Does it include the clear overview on what the project is about? (4)</p>
-</li>
-<li><p>Does it explain how the environment works and what the game rules are? (4)</p>
-</li>
-</ol>
 <p>For my project, I chose to teach a learning model to play the original Super Mario Bros. game for the NES. I utilized a library created by Christian Kauten called gym-super-mario-bros, which provides an OpenAI Gym environment using the nes-py emulator (Kauten, 2018). The challenge is to beat as many levels as possible in the original Mario game for NES with the following rules of the game.</p>
 <p>The goal of the game is to avoid enemies and pits to reach the end of each level. One hit and Mario loses a life, starting over from the nearest checkpoint. Power-ups provide Mario an additional hit. The following page from the original game manual outlines the inputs Mario receives for the game:</p>
 <p><img alt="image" src="https://raw.githubusercontent.com/seel6470/CSPB-3202-Final-Project/main/images/controls.jpg"/></p>
@@ -7713,13 +7707,7 @@ a.anchor-link {
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
 <p><a id="approach"></a></p>
-<h2 id="Approach">Approach<a class="anchor-link" href="#Approach">¶</a></h2><p><em>explain your environment, your choice of model(s), the methods and purpose of testing and experiments, explain any trouble shooting required.</em></p>
-<ol start="3">
-<li><p>Does it explain clearly the model(s) of choices, the methods and purpose of tests and experiments? (7)</p>
-</li>
-<li><p>Does it show problem solving procedure- e.g. how the author solved and improved when an algorithm doesn't work well. Note that it's not about debugging or programming/implementation, but about when a correctly implemented algorithm wasn't enough for the problem and the author had to modify/add some features or techniques, or compare with another model, etc. (7)</p>
-</li>
-</ol>
+<h2 id="Approach">Approach<a class="anchor-link" href="#Approach">¶</a></h2>
 <p>The initial setup for the environment was a bit tricky due to some incompatibilities between the chosen gym library gym-super-mario-bros JoypadSpace wrapper and the current version of OpenAi's gym framework, specifically with the <code>reset</code> method. Huge thanks to NathanGavinski who supplied <a href="https://github.com/Kautenja/gym-super-mario-bros/issues/128#issuecomment-1954019091">a workaround</a> in the issues forum for gym-super-mario-bros Git. (NathanGavenski, 2023).</p>
 <p>The following code utilizes this fix along with the suggested boilerplate setup from the gym-super-mario-bros documentation:</p>
 </div>
@@ -9036,15 +9024,7 @@ Max Stage: 1
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
 <p><a id="references"></a></p>
-<h2 id="References">References<a class="anchor-link" href="#References">¶</a></h2><ol start="7">
-<li>Does it include all deliverables (3)<ul>
-<li>git with codes or notebooks</li>
-<li>writeup (you can consider notebook as a writeup if the notebook contains all needed contents and explanation)</li>
-<li>demo clips</li>
-<li>proper quote or reference</li>
-</ul>
-</li>
-</ol>
+<h2 id="References">References<a class="anchor-link" href="#References">¶</a></h2>
 <p>Gavenski, Nathan. (2023). Comment on issue #128 in Kautenja/gym-super-mario-bros repository. GitHub. Retrieved from <a href="https://github.com/Kautenja/gym-super-mario-bros/issues/128#issuecomment-1954019091">https://github.com/Kautenja/gym-super-mario-bros/issues/128#issuecomment-1954019091</a></p>
 <p>Kauten, Christian. (2018). Super Mario Bros for OpenAI Gym. GitHub. Retrieved from <a href="https://github.com/Kautenja/gym-super-mario-bros">https://github.com/Kautenja/gym-super-mario-bros</a></p>
 <p>Kundu, Sourish. (2023). Super Mario Bros Reinforcement Learning. GitHub, 2023, <a href="https://github.com/Sourish07/Super-Mario-Bros-RL">https://github.com/Sourish07/Super-Mario-Bros-RL</a>.</p>
