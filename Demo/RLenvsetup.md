@@ -1,4 +1,4 @@
-# Setiing up the environment
+# Setting up the environment
 The commands valid as of 04-10-2020
 This additional package assumes you have other standard dependencies installed. If not and it causes error in the middle, please follow the message to troubleshoot or reach out to us for help.
 This is for a local machine in a linux server, and has not been tested in the other system. If you use a VM service such as google colab and encounter a problem, please reach out to us.
