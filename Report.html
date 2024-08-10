@@ -7527,7 +7527,7 @@ a.anchor-link {
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h1 id="Super-Mario-Bros-Reflexive-Agent">Super Mario Bros Reflexive Agent<a class="anchor-link" href="#Super-Mario-Bros-Reflexive-Agent">¶</a></h1><ol type="I">
+<h1 id="Beating-Super-Mario-Bros-1-1-With-Reinforcement-Learning">Beating Super Mario Bros 1-1 With Reinforcement Learning<a class="anchor-link" href="#Beating-Super-Mario-Bros-1-1-With-Reinforcement-Learning">¶</a></h1><ol type="I">
 <li><a href="#short-overview">Short Overview</a></li>
 <li><a href="#approach">Approach</a>
 <ol type="A">
@@ -7665,9 +7665,42 @@ a.anchor-link {
 </tbody>
 </table>
 <p>Additionally, the environment utilizes the following parameters for the reward function:</p>
-<p>v: the difference in agent x values between states</p>
-<p>c: the difference in the game clock between frames</p>
-<p>d: a death penalty that penalizes the agent for dying in a state</p>
+<ol>
+<li><p><strong>v</strong>: the difference in agent x values between states</p>
+<ul>
+<li>In this case, this is instantaneous velocity for the given step</li>
+<li>( v = x1 - x0 )<ul>
+<li>( x0 ) is the x position before the step</li>
+<li>( x1 ) is the x position after the step</li>
+</ul>
+</li>
+<li>Moving right ( \implies v &gt; 0 )</li>
+<li>Moving left ( \implies v &lt; 0 )</li>
+<li>Not moving ( \implies v = 0 )</li>
+</ul>
+</li>
+<li><p><strong>c</strong>: the difference in the game clock between frames</p>
+<ul>
+<li>The penalty prevents the agent from standing still</li>
+<li>( c = c0 - c1 )<ul>
+<li>( c0 ) is the clock reading before the step</li>
+<li>( c1 ) is the clock reading after the step</li>
+</ul>
+</li>
+<li>No clock tick ( \implies c = 0 )</li>
+<li>Clock tick ( \implies c &lt; 0 )</li>
+</ul>
+</li>
+<li><p><strong>d</strong>: a death penalty that penalizes the agent for dying in a state</p>
+<ul>
+<li>This penalty encourages the agent to avoid death</li>
+<li>Alive ( \implies d = 0 )</li>
+<li>Dead ( \implies d = -15 )</li>
+</ul>
+</li>
+</ol>
+<p>( r = v + c + d )</p>
+<p>The reward is clipped into the range ([-15, 15]).</p>
 <p>In addition to the gym-super-mario-bros library, nes-py is required in order to emulate the NES in Python. Huge thanks to Kautenja for creating the environment and making this project possible! (Kauten, 2018)</p>
 </div>
 </div>
@@ -7697,7 +7730,7 @@ a.anchor-link {
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [1]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [6]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">gym</span>
@@ -7735,7 +7768,10 @@ a.anchor-link {
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
-<pre>c:\Users\sethe\AppData\Local\Programs\Python\Python312\Lib\site-packages\gym\envs\registration.py:555: UserWarning: <span class="ansi-yellow-fg">WARN: The environment SuperMarioBros-v0 is out of date. You should consider upgrading to version `v3`.</span>
+<pre>c:\Users\sethe\AppData\Local\Programs\Python\Python312\Lib\site-packages\gym\envs\registration.py:568: UserWarning: <span class="ansi-yellow-fg">WARN: The environment SuperMarioBros-v0 is out of date. You should consider upgrading to version `v3`.</span>
+  logger.warn(
+c:\Users\sethe\AppData\Local\Programs\Python\Python312\Lib\site-packages\gym\envs\registration.py:619: UserWarning: <span class="ansi-yellow-fg">WARN: Env check failed with the following message: Calling the reset method with `return_info=True` did not return a 2-tuple
+You can set `disable_env_checker=True` to disable this check.</span>
   logger.warn(
 </pre>
 </div>
@@ -7759,7 +7795,7 @@ a.anchor-link {
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [2]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [36]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-ipython3"><pre><span></span><span class="n">done</span> <span class="o">=</span> <span class="kc">True</span>
@@ -7778,7 +7814,7 @@ a.anchor-link {
     <span class="k">elif</span> <span class="n">info</span><span class="p">[</span><span class="s1">'stage'</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">max_stage</span><span class="p">:</span>
         <span class="n">max_stage</span> <span class="o">=</span> <span class="n">info</span><span class="p">[</span><span class="s1">'stage'</span><span class="p">]</span>
         <span class="n">max_x</span> <span class="o">=</span> <span class="mi">0</span>
-    <span class="k">elif</span> <span class="n">info</span><span class="p">[</span><span class="s1">'x_pos'</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">max_x</span><span class="p">:</span>
+    <span class="k">elif</span> <span class="n">info</span><span class="p">[</span><span class="s1">'world'</span><span class="p">]</span> <span class="o">==</span> <span class="n">max_world</span> <span class="ow">and</span> <span class="n">info</span><span class="p">[</span><span class="s1">'stage'</span><span class="p">]</span> <span class="o">==</span> <span class="n">max_stage</span> <span class="ow">and</span> <span class="n">info</span><span class="p">[</span><span class="s1">'x_pos'</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">max_x</span><span class="p">:</span>
         <span class="n">max_x</span> <span class="o">=</span> <span class="n">info</span><span class="p">[</span><span class="s1">'x_pos'</span><span class="p">]</span>
     <span class="n">done</span> <span class="o">=</span> <span class="n">done</span> <span class="ow">or</span> <span class="n">truncated</span>
     <span class="n">env</span><span class="o">.</span><span class="n">render</span><span class="p">()</span>
@@ -7801,13 +7837,7 @@ a.anchor-link {
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
-<pre>c:\Users\sethe\AppData\Local\Programs\Python\Python312\Lib\site-packages\gym\utils\passive_env_checker.py:195: UserWarning: <span class="ansi-yellow-fg">WARN: The result returned by `env.reset()` was not a tuple of the form `(obs, info)`, where `obs` is a observation and `info` is a dictionary containing additional information. Actual type: `&lt;class 'numpy.ndarray'&gt;`</span>
-  logger.warn(
-c:\Users\sethe\AppData\Local\Programs\Python\Python312\Lib\site-packages\gym\utils\passive_env_checker.py:219: DeprecationWarning: <span class="ansi-yellow-fg">WARN: Core environment is written in old step API which returns one bool instead of two. It is recommended to rewrite the environment with new step API. </span>
-  logger.deprecation(
-c:\Users\sethe\AppData\Local\Programs\Python\Python312\Lib\site-packages\gym\utils\passive_env_checker.py:225: DeprecationWarning: `np.bool8` is a deprecated alias for `np.bool_`.  (Deprecated NumPy 1.24)
-  if not isinstance(done, (bool, np.bool8)):
-c:\Users\sethe\AppData\Local\Programs\Python\Python312\Lib\site-packages\gym\utils\passive_env_checker.py:272: UserWarning: <span class="ansi-yellow-fg">WARN: No render modes was declared in the environment (env.metadata['render_modes'] is None or not defined), you may have trouble when calling `.render()`.</span>
+<pre>c:\Users\sethe\AppData\Local\Programs\Python\Python312\Lib\site-packages\gym\utils\passive_env_checker.py:272: UserWarning: <span class="ansi-yellow-fg">WARN: No render modes was declared in the environment (env.metadata['render_modes'] is None or not defined), you may have trouble when calling `.render()`.</span>
   logger.warn(
 </pre>
 </div>
@@ -7830,10 +7860,8 @@ Max Stage: 1
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<video controls="" height="240" width="320">
-<source src="./images/random_agent.mp4" type="video/mp4"/>
-</video>
-<p>You can see that the random agent never gets past the second pipe. This is because it is not probabilistically reasonable for random inputs to know to sustain a jump by pressing A to get high enough to clear the pipe and keep going. This pipe exists at an X value of 595. Let's see if there are any other agents that can get farther.</p>
+<p><img alt="image" src="images/random_agent.gif"/></p>
+<p>You can see that the random agent never gets past the second pipe. This is because it is not probabilistically reasonable for random inputs to know to sustain a jump by pressing and holding A to get high enough to clear the pipe and keep going. This pipe exists at an X value of 595/596. Let's see if there are any other agents that can get farther.</p>
 </div>
 </div>
 </div>
@@ -7856,7 +7884,7 @@ Max Stage: 1
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<p>To get a baseling, I decided to implement a basic heuristic model that uses a simple algorithm to try to beat a level of Super Mario Bros.</p>
+<p>Although it is not reinforcement learning, I decided to implement a basic heuristic model that uses a simple algorithm to try to beat a level of Super Mario Bros which will serve as our milestone to beat. If our RL agent is able to surpass the heuristic agent, we will consider the RL agent to be a success.</p>
 </div>
 </div>
 </div>
@@ -7865,7 +7893,7 @@ Max Stage: 1
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [99]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [7]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-ipython3"><pre><span></span><span class="c1"># Create the Super Mario Bros. environment</span>
@@ -7888,6 +7916,8 @@ Max Stage: 1
 <span class="n">done</span> <span class="o">=</span> <span class="kc">True</span>
 <span class="n">going_up</span> <span class="o">=</span> <span class="kc">False</span>
 <span class="n">prev_y</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="n">min_y</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">max_y</span> <span class="o">=</span> <span class="mi">0</span>
 
 <span class="n">max_x</span> <span class="o">=</span> <span class="mi">0</span>
 <span class="n">max_world</span> <span class="o">=</span> <span class="mi">0</span>
@@ -7922,13 +7952,13 @@ Max Stage: 1
     <span class="k">elif</span> <span class="n">info</span><span class="p">[</span><span class="s1">'stage'</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">max_stage</span><span class="p">:</span>
         <span class="n">max_stage</span> <span class="o">=</span> <span class="n">info</span><span class="p">[</span><span class="s1">'stage'</span><span class="p">]</span>
         <span class="n">max_x</span> <span class="o">=</span> <span class="mi">0</span>
-    <span class="k">elif</span> <span class="n">info</span><span class="p">[</span><span class="s1">'x_pos'</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">max_x</span><span class="p">:</span>
+    <span class="k">elif</span> <span class="n">info</span><span class="p">[</span><span class="s1">'world'</span><span class="p">]</span> <span class="o">==</span> <span class="n">max_world</span> <span class="ow">and</span> <span class="n">info</span><span class="p">[</span><span class="s1">'stage'</span><span class="p">]</span> <span class="o">==</span> <span class="n">max_stage</span> <span class="ow">and</span> <span class="n">info</span><span class="p">[</span><span class="s1">'x_pos'</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">max_x</span><span class="p">:</span>
         <span class="n">max_x</span> <span class="o">=</span> <span class="n">info</span><span class="p">[</span><span class="s1">'x_pos'</span><span class="p">]</span>
 
     <span class="k">if</span> <span class="n">done</span> <span class="ow">or</span> <span class="n">truncated</span><span class="p">:</span>
         <span class="n">done</span> <span class="o">=</span> <span class="kc">True</span>
     <span class="n">env</span><span class="o">.</span><span class="n">render</span><span class="p">()</span>
-    <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.01</span><span class="p">)</span>  <span class="c1"># Add a delay of 0.01 seconds between frames</span>
+    <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.01</span><span class="p">)</span>  <span class="c1"># Add a delay of 0.01 seconds between frames to slow down render</span>
 
 <span class="c1"># Close the environment</span>
 <span class="n">env</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
@@ -7947,7 +7977,7 @@ Max Stage: 1
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>Max X: 320
+<pre>Max X: 199
 Max World: 1
 Max Stage: 2
 </pre>
@@ -7962,11 +7992,9 @@ Max Stage: 2
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<video controls="" height="240" width="320">
-<source src="./images/heuristic_agent.mp4" type="video/mp4"/>
-</video>
+<p><img alt="image" src="images/heuristic_agent.gif"/></p>
 <p>This heuristic, while not an actual learning model, is effective by sheer luck. This strategy is similar to what an actual player might try when attempting to beat the first level. It is intuitive to try and jump as high and as often as possible to clear most obstacles and enemies. It is by sheer luck (and some deaths) that the heuristic is able to avoid enemies and pits. Despite this, however, this agent is able to clear the first level, although it does not get very far in the second level.</p>
-<p>Let's try to create a learning model and see if the agent can beat the level without relying on luck.</p>
+<p>Let's try to create a reinforcement learning model and see if the agent can beat the level without relying on luck.</p>
 </div>
 </div>
 </div>
@@ -7989,19 +8017,189 @@ Max Stage: 2
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<p>Let's actually have an agent that learns, rather than blindly jumping. We'll start by creating a basic Proximal Policy Optimization (PPO) that makes stable updates to policies by limiting drastic changes, ensuring efficient learning.</p>
+<p>Let's actually have an agent that learns, rather than blindly jumping. The initial model of choice will be a Proximal Policy Optimization (PPO) agent. This type of reinforcement learning model learns a policy that directly maps an approximation of the optimal action for any given state to exploit  to approximate the optimal action for any given state to maximize the reward returned over time.</p>
+<p>It does this by using gradient ascent to maximize the policy using the clipped objective function, which helps avoid making drastic weight updates:</p>
+<p>$L(\theta) = \mathbb{E} \left[ \min \left( \frac{\pi_{\theta}(a|s)}{\pi_{\theta_{\text{old}}}(a|s)} \hat{A}, \text{clip}\left(\frac{\pi_{\theta}(a|s)}{\pi_{\theta_{\text{old}}}(a|s)}, 1 - \epsilon, 1 + \epsilon \right) \hat{A} \right) \right]$</p>
+<p>This function seeks to optimize the parameters ($\theta$) of the neural network by evaluating the expected value ($\mathbb{E}$) of the minimum between the following two values:</p>
+<p>$$\frac{\pi_{\theta}(a|s)}{\pi_{\theta_{\text{old}}}(a|s)} \hat{A}$$</p>
+<p style="text-align: center;">or</p>
+<p>$$\text{clip}\left(\frac{\pi_{\theta}(a|s)}{\pi_{\theta_{\text{old}}}(a|s)}, 1 - \epsilon, 1 + \epsilon \right) \hat{A}$$</p>
+<p>$\frac{\pi_{\theta}(a|s)}{\pi_{\theta_{\text{old}}}(a|s)}$ is the policy ratio, or how much the new policy $\pi_\theta$ has changed in relation to the old policy $\pi_{old}$ and $\hat A$ is the advantage, or how much better or worse the action $a$ is compared to the average action taken in state $s$</p>
+<p>The first term represents the weight change when the policy ratio is directly multiplied by the advantage. The second uses the clipping function to constrain the value of the policy ratio within the range $1 - \epsilon$ and $1 + \epsilon$ before multiplying with the advantage $\hat A$</p>
+<p>Finding the expected value of the minimum of these two terms results in a gradient ascent that should prevent drastic policy updates and ensure more stable learning.</p>
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=9957fa4c">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=9957fa4c">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [72]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
-<div class="highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<div class="highlight hl-ipython3"><pre><span></span><span class="c1"># Train the agent</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">gym_super_mario_bros</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">gym</span> <span class="c1"># v0.26.2</span>
+<span class="kn">from</span> <span class="nn">nes_py.wrappers</span> <span class="kn">import</span> <span class="n">JoypadSpace</span>
+<span class="kn">from</span> <span class="nn">gym_super_mario_bros.actions</span> <span class="kn">import</span> <span class="n">SIMPLE_MOVEMENT</span>
+<span class="kn">from</span> <span class="nn">gym.wrappers</span> <span class="kn">import</span> <span class="n">GrayScaleObservation</span>
+<span class="kn">from</span> <span class="nn">gym.wrappers</span> <span class="kn">import</span> <span class="n">StepAPICompatibility</span><span class="p">,</span> <span class="n">TimeLimit</span>
+<span class="kn">from</span> <span class="nn">stable_baselines3</span> <span class="kn">import</span> <span class="n">PPO</span>
+<span class="kn">from</span> <span class="nn">stable_baselines3.common.vec_env</span> <span class="kn">import</span> <span class="n">DummyVecEnv</span><span class="p">,</span> <span class="n">VecFrameStack</span><span class="p">,</span> <span class="n">VecMonitor</span>
+<span class="kn">from</span> <span class="nn">stable_baselines3.common.monitor</span> <span class="kn">import</span> <span class="n">Monitor</span>
+<span class="kn">from</span> <span class="nn">stable_baselines3.common.evaluation</span> <span class="kn">import</span> <span class="n">evaluate_policy</span>
+<span class="kn">from</span> <span class="nn">stable_baselines3.common.callbacks</span> <span class="kn">import</span> <span class="n">EvalCallback</span><span class="p">,</span> <span class="n">CheckpointCallback</span>
+<span class="kn">from</span> <span class="nn">gym.wrappers</span> <span class="kn">import</span> <span class="n">GrayScaleObservation</span><span class="p">,</span> <span class="n">ResizeObservation</span><span class="p">,</span> <span class="n">FrameStack</span>
+<span class="kn">from</span> <span class="nn">gym</span> <span class="kn">import</span> <span class="n">Wrapper</span>
+<span class="kn">from</span> <span class="nn">gym</span> <span class="kn">import</span> <span class="n">RewardWrapper</span>
+<span class="kn">import</span> <span class="nn">os</span>
+
+<span class="k">class</span> <span class="nc">SkipFrame</span><span class="p">(</span><span class="n">Wrapper</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">env</span><span class="p">,</span> <span class="n">skip</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">skip</span> <span class="o">=</span> <span class="n">skip</span>
+    
+    <span class="k">def</span> <span class="nf">step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">):</span>
+        <span class="c1"># create a reward accumulator</span>
+        <span class="n">reward_accum</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="n">done</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">skip</span><span class="p">):</span>
+            <span class="n">next_state</span><span class="p">,</span> <span class="n">reward</span><span class="p">,</span> <span class="n">done</span><span class="p">,</span> <span class="n">truncated</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">action</span><span class="p">)</span>
+            <span class="c1"># add reward to accumulator</span>
+            <span class="n">reward_accum</span> <span class="o">+=</span> <span class="n">reward</span>
+            <span class="k">if</span> <span class="n">done</span><span class="p">:</span>
+                <span class="k">break</span>
+        <span class="k">return</span> <span class="n">next_state</span><span class="p">,</span> <span class="n">reward_accum</span><span class="p">,</span> <span class="n">done</span><span class="p">,</span> <span class="n">truncated</span><span class="p">,</span> <span class="n">info</span>
+
+<span class="c1"># final custom reward calculation after failed training (see below for details)</span>
+<span class="k">class</span> <span class="nc">CustStepReward</span><span class="p">(</span><span class="n">Wrapper</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">env</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">prev_y_pos</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">reward_mean</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">reward_var</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_rewards</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">succesive_A_presses</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="k">def</span> <span class="nf">step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">):</span>
+        <span class="n">done</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">next_state</span><span class="p">,</span> <span class="n">reward</span><span class="p">,</span> <span class="n">done</span><span class="p">,</span> <span class="n">truncated</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">action</span><span class="p">)</span>
+        <span class="c1"># if rising, agent must have pressed A state before</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">prev_y_pos</span> <span class="o">&lt;</span> <span class="n">info</span><span class="p">[</span><span class="s1">'y_pos'</span><span class="p">]:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">succesive_A_presses</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="n">reward</span> <span class="o">+=</span> <span class="mi">2</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">succesive_A_presses</span> <span class="c1"># incentivize jumping higher if already jumping</span>
+        <span class="c1"># agent is not rising</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># reset to 0</span>
+            <span class="c1"># no reward (and no penalty)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">succesive_A_presses</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">prev_y_pos</span> <span class="o">=</span> <span class="n">info</span><span class="p">[</span><span class="s1">'y_pos'</span><span class="p">]</span>
+        
+        <span class="k">if</span> <span class="n">info</span><span class="p">[</span><span class="s1">'life'</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="n">reward</span> <span class="o">-=</span> <span class="mi">50</span> <span class="c1"># heavily penalize death and end the episode</span>
+            <span class="n">done</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">if</span> <span class="n">info</span><span class="p">[</span><span class="s1">'flag_get'</span><span class="p">]:</span>
+            <span class="n">reward</span> <span class="o">+=</span> <span class="mi">100</span> <span class="c1"># heavily incentivize beating the level</span>
+        
+        <span class="c1"># Update reward statistics</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_rewards</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="n">old_mean</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">reward_mean</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">reward_mean</span> <span class="o">+=</span> <span class="p">(</span><span class="n">reward</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">reward_mean</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_rewards</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">reward_var</span> <span class="o">+=</span> <span class="p">(</span><span class="n">reward</span> <span class="o">-</span> <span class="n">old_mean</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">reward</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">reward_mean</span><span class="p">)</span>
+        
+        <span class="c1"># Normalize reward</span>
+        <span class="n">reward_std</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">reward_var</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_rewards</span><span class="p">)</span>
+        <span class="n">normalized_reward</span> <span class="o">=</span> <span class="p">(</span><span class="n">reward</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">reward_mean</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">reward_std</span> <span class="o">+</span> <span class="mf">1e-8</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">next_state</span><span class="p">,</span> <span class="n">normalized_reward</span><span class="p">,</span> <span class="n">done</span><span class="p">,</span> <span class="n">truncated</span><span class="p">,</span> <span class="n">info</span>
+
+
+<span class="c1"># Create the Super Mario Bros. environment</span>
+<span class="n">env</span> <span class="o">=</span> <span class="n">gym</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="s1">'SuperMarioBros-v0'</span><span class="p">)</span>
+<span class="n">steps</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">_max_episode_steps</span>
+
+<span class="n">CUSTOM_ACTIONS</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">[</span><span class="s1">'right'</span><span class="p">,</span> <span class="s1">'A'</span><span class="p">,</span> <span class="s1">'B'</span><span class="p">],</span>
+    <span class="p">[</span><span class="s1">'right'</span><span class="p">,</span><span class="s1">'B'</span><span class="p">]</span>
+<span class="p">]</span>
+
+<span class="c1"># Set the Joypad wrapper</span>
+<span class="n">env</span> <span class="o">=</span> <span class="n">JoypadSpace</span><span class="p">(</span><span class="n">env</span><span class="o">.</span><span class="n">env</span><span class="p">,</span> <span class="n">CUSTOM_ACTIONS</span><span class="p">)</span>
+<span class="c1"># Overwrite the old reset to accept seeds and options args</span>
+<span class="k">def</span> <span class="nf">gymnasium_reset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">(),</span> <span class="p">{}</span>
+<span class="n">env</span><span class="o">.</span><span class="n">reset</span> <span class="o">=</span> <span class="n">gymnasium_reset</span><span class="o">.</span><span class="fm">__get__</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">JoypadSpace</span><span class="p">)</span>
+
+<span class="n">env</span> <span class="o">=</span> <span class="n">StepAPICompatibility</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">output_truncation_bool</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="c1">#env = CustStepReward(env)</span>
+
+<span class="c1">#env = SkipFrame(env, skip=4)</span>
+<span class="c1">#env = ResizeObservation(env, shape=84) # reduce size of frame image</span>
+<span class="c1">#env = GrayScaleObservation(env) # create grayscale images</span>
+<span class="c1">#env = FrameStack(env, num_stack=8, lz4_compress=True) # stack frames</span>
+
+<span class="n">model</span> <span class="o">=</span> <span class="n">PPO</span><span class="p">(</span>
+    <span class="s1">'CnnPolicy'</span><span class="p">,</span>      <span class="c1"># Use a convolutional neural network</span>
+    <span class="n">env</span><span class="p">,</span>              <span class="c1"># Game environment</span>
+    <span class="n">verbose</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>        <span class="c1"># print diagnostics</span>
+    <span class="n">learning_rate</span><span class="o">=</span><span class="mf">3e-4</span><span class="p">,</span>  <span class="c1"># how much to adjust the model with each step</span>
+    <span class="n">n_steps</span><span class="o">=</span><span class="mi">512</span><span class="p">,</span>      <span class="c1"># frequency of updates</span>
+    <span class="n">batch_size</span><span class="o">=</span><span class="mi">128</span><span class="p">,</span>   <span class="c1"># number of state samples evaluated in clipping objective function</span>
+    <span class="n">clip_range</span> <span class="o">=</span> <span class="mf">0.2</span><span class="p">,</span> <span class="c1"># range to clip policy ratio in the clipping objective function</span>
+    <span class="n">ent_coef</span> <span class="o">=</span> <span class="mf">0.9</span><span class="p">,</span>   <span class="c1"># entropy coefficient to encourage exploration</span>
+    <span class="n">gamma</span> <span class="o">=</span> <span class="mf">0.99</span>      <span class="c1"># diminishes rewards for future action-state returns</span>
+<span class="p">)</span>
+
+
+<span class="c1"># uncomment if continuing a previous training session</span>
+<span class="c1">#model.load(os.path.join("trained_agents","ppo","ppo_mario.zip"))</span>
+
+<span class="c1"># Define evaluation and checkpoint callbacks</span>
+<span class="n">eval_callback</span> <span class="o">=</span> <span class="n">EvalCallback</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">best_model_save_path</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">'trained_agents'</span><span class="p">,</span><span class="s1">'ppo'</span><span class="p">),</span> <span class="n">log_path</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">'trained_agents'</span><span class="p">,</span><span class="s1">'ppo'</span><span class="p">,</span><span class="s1">'logs'</span><span class="p">),</span> <span class="n">eval_freq</span><span class="o">=</span><span class="mi">5000</span><span class="p">,</span> <span class="n">deterministic</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">render</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">checkpoint_callback</span> <span class="o">=</span> <span class="n">CheckpointCallback</span><span class="p">(</span><span class="n">save_freq</span><span class="o">=</span><span class="mi">25000</span><span class="p">,</span> <span class="n">save_path</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">'trained_agents'</span><span class="p">,</span><span class="s1">'ppo'</span><span class="p">),</span> <span class="n">name_prefix</span><span class="o">=</span><span class="s1">'ppo_mario'</span><span class="p">)</span>
+
+<span class="n">model</span><span class="o">.</span><span class="n">learn</span><span class="p">(</span><span class="n">total_timesteps</span><span class="o">=</span><span class="mi">700000</span><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="p">[</span><span class="n">eval_callback</span><span class="p">,</span> <span class="n">checkpoint_callback</span><span class="p">])</span>
+
+<span class="n">model</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">'trained_agents'</span><span class="p">,</span><span class="s1">'ppo'</span><span class="p">,</span><span class="s1">'ppo_mario_2'</span><span class="p">))</span>
+
+<span class="c1"># Evaluate the agent</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"evaluating policy..."</span><span class="p">)</span>
+<span class="n">mean_reward</span><span class="p">,</span> <span class="n">std_reward</span> <span class="o">=</span> <span class="n">evaluate_policy</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">model</span><span class="o">.</span><span class="n">get_env</span><span class="p">(),</span> <span class="n">n_eval_episodes</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">env</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Mean reward: </span><span class="si">{</span><span class="n">mean_reward</span><span class="si">}</span><span class="s2"> ± </span><span class="si">{</span><span class="n">std_reward</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=384fdaf2">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<p>To optimize the learning process, I decided to use several wrappers for optimization. The idea for these optimizations came from a video by Sourish Kundu I used as the basis for the Q-Learning model implemented later in this project (Kundu, 2023). The following additions implemented above along with configuring Stable Baselines to use the GPU sped up the learning process quite a bit and allowed me to train the model for 400,000 episodes over the course of only a few hours.</p>
+<p>The first optimization is to create a custom wrapper that skips every four frames. Since the NES Mario Bros runs at about 60 fps, not much changes in the game state for each frame and the agent will choose an action and repeat the action for every four frames.</p>
+<p>Additional optimizations included downgrading from color RGB pixel values to gray scale values, reducing the image size, and stacking 8 frames at a time. The framestacking, when combined with the frame skipping, reduces the processing complexity of the model and at the same time allow it to interpret more meaningful game state changes than it would otherwise evaluate from every individual frame.</p>
+<p>The actual architecture of the model uses a convolutional neural network <strong>use model.policy to determine model architecture</strong>.</p>
+</div>
+</div>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=c6daca08">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="cm-editor cm-s-jupyter">
+<div class="highlight hl-ipython3"><pre><span></span><span class="c1"># Test the trained agent</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">gym_super_mario_bros</span>
 <span class="kn">import</span> <span class="nn">time</span>
 <span class="kn">import</span> <span class="nn">gym</span>
@@ -8014,340 +8212,41 @@ Max Stage: 2
 <span class="kn">from</span> <span class="nn">stable_baselines3.common.monitor</span> <span class="kn">import</span> <span class="n">Monitor</span>
 <span class="kn">from</span> <span class="nn">stable_baselines3.common.evaluation</span> <span class="kn">import</span> <span class="n">evaluate_policy</span>
 <span class="kn">from</span> <span class="nn">stable_baselines3.common.callbacks</span> <span class="kn">import</span> <span class="n">EvalCallback</span><span class="p">,</span> <span class="n">CheckpointCallback</span>
+<span class="kn">import</span> <span class="nn">os</span>
 
 <span class="c1"># Create the Super Mario Bros. environment</span>
 <span class="n">env</span> <span class="o">=</span> <span class="n">gym</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="s1">'SuperMarioBros-v0'</span><span class="p">)</span>
 <span class="n">steps</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">_max_episode_steps</span>
-
+<span class="n">CUSTOM_ACTIONS</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">[</span><span class="s1">'right'</span><span class="p">,</span> <span class="s1">'A'</span><span class="p">,</span> <span class="s1">'B'</span><span class="p">],</span>
+    <span class="p">[</span><span class="s1">'right'</span><span class="p">,</span><span class="s1">'B'</span><span class="p">]</span>
+<span class="p">]</span>
 <span class="c1"># Set the Joypad wrapper</span>
 <span class="n">env</span> <span class="o">=</span> <span class="n">JoypadSpace</span><span class="p">(</span><span class="n">env</span><span class="o">.</span><span class="n">env</span><span class="p">,</span> <span class="n">SIMPLE_MOVEMENT</span><span class="p">)</span>
 <span class="c1"># Overwrite the old reset to accept seeds and options args</span>
+<span class="k">def</span> <span class="nf">gymnasium_reset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">(),</span> <span class="p">{}</span>
 <span class="n">env</span><span class="o">.</span><span class="n">reset</span> <span class="o">=</span> <span class="n">gymnasium_reset</span><span class="o">.</span><span class="fm">__get__</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">JoypadSpace</span><span class="p">)</span>
+
 <span class="n">env</span> <span class="o">=</span> <span class="n">StepAPICompatibility</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">output_truncation_bool</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="c1">#env = CustStepReward(env)</span>
 
-<span class="n">model</span> <span class="o">=</span> <span class="n">PPO</span><span class="p">(</span>
-    <span class="s1">'CnnPolicy'</span><span class="p">,</span>      <span class="c1"># Use a convolutional neural network</span>
-    <span class="n">env</span><span class="p">,</span>              <span class="c1"># environment</span>
-    <span class="n">verbose</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>        <span class="c1"># print diagnostics</span>
-    <span class="n">learning_rate</span><span class="o">=</span><span class="mf">1e-4</span><span class="p">,</span>  <span class="c1"># controls how much to adjust the model with each step</span>
-    <span class="n">n_steps</span><span class="o">=</span><span class="mi">128</span><span class="p">,</span>      <span class="c1"># affects the frequency of updates</span>
-    <span class="n">batch_size</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span>    <span class="c1"># number of samples per gradient update</span>
-    <span class="n">n_epochs</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>       <span class="c1"># Number of epochs</span>
-    <span class="n">clip_range</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span>   <span class="c1"># helps in limiting updates for stable training</span>
-    <span class="n">ent_coef</span><span class="o">=</span><span class="mf">0.03</span>     <span class="c1"># use entropy to encourage exploration</span>
-<span class="p">)</span>
+<span class="c1">#env = SkipFrame(env, skip=4)</span>
+<span class="c1">#env = ResizeObservation(env, shape=84) # reduce size of frame image</span>
+<span class="c1">#env = GrayScaleObservation(env) # create grayscale images</span>
+<span class="c1">#env = FrameStack(env, num_stack=8, lz4_compress=True) # stack frames</span>
 
-<span class="c1"># Define evaluation and checkpoint callbacks</span>
-<span class="n">eval_callback</span> <span class="o">=</span> <span class="n">EvalCallback</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">best_model_save_path</span><span class="o">=</span><span class="s1">'./logs/'</span><span class="p">,</span> <span class="n">log_path</span><span class="o">=</span><span class="s1">'./logs/'</span><span class="p">,</span> <span class="n">eval_freq</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span> <span class="n">deterministic</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">render</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-<span class="n">checkpoint_callback</span> <span class="o">=</span> <span class="n">CheckpointCallback</span><span class="p">(</span><span class="n">save_freq</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">save_path</span><span class="o">=</span><span class="s1">'./models/'</span><span class="p">,</span> <span class="n">name_prefix</span><span class="o">=</span><span class="s1">'ppo_mario'</span><span class="p">)</span>
-
-<span class="n">model</span><span class="o">.</span><span class="n">learn</span><span class="p">(</span><span class="n">total_timesteps</span><span class="o">=</span><span class="mi">1500</span><span class="p">)</span>
-
-<span class="c1"># model = PPO.load("ppo_mario.zip")</span>
-
-<span class="n">model</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s2">"./trained_agents/ppo_mario"</span><span class="p">)</span>
-
-<span class="c1"># Evaluate the agent</span>
-<span class="n">mean_reward</span><span class="p">,</span> <span class="n">std_reward</span> <span class="o">=</span> <span class="n">evaluate_policy</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">model</span><span class="o">.</span><span class="n">get_env</span><span class="p">(),</span> <span class="n">n_eval_episodes</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Mean reward: </span><span class="si">{</span><span class="n">mean_reward</span><span class="si">}</span><span class="s2"> ± </span><span class="si">{</span><span class="n">std_reward</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-</div>
-</div>
-<div class="jp-Cell-outputWrapper">
-<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
-</div>
-<div class="jp-OutputArea jp-Cell-outputArea">
-<div class="jp-OutputArea-child">
-<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
-<pre>c:\Users\sethe\AppData\Local\Programs\Python\Python312\Lib\site-packages\gym\envs\registration.py:555: UserWarning: <span class="ansi-yellow-fg">WARN: The environment SuperMarioBros-v0 is out of date. You should consider upgrading to version `v3`.</span>
-  raise ModuleNotFoundError(
-</pre>
-</div>
-</div>
-<div class="jp-OutputArea-child">
-<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>Using cpu device
-Wrapping the env with a `Monitor` wrapper
-Wrapping the env in a DummyVecEnv.
-Wrapping the env in a VecTransposeImage.
-</pre>
-</div>
-</div>
-<div class="jp-OutputArea-child">
-<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
-<pre>c:\Users\sethe\AppData\Local\Programs\Python\Python312\Lib\site-packages\stable_baselines3\common\vec_env\patch_gym.py:49: UserWarning: You provided an OpenAI Gym environment. We strongly recommend transitioning to Gymnasium environments. Stable-Baselines3 is automatically wrapping your environments in a compatibility layer, which could potentially cause issues.
-  warnings.warn(
-c:\Users\sethe\AppData\Local\Programs\Python\Python312\Lib\site-packages\gym\utils\passive_env_checker.py:195: UserWarning: <span class="ansi-yellow-fg">WARN: The result returned by `env.reset()` was not a tuple of the form `(obs, info)`, where `obs` is a observation and `info` is a dictionary containing additional information. Actual type: `&lt;class 'numpy.ndarray'&gt;`</span>
-  logger.warn(
-c:\Users\sethe\AppData\Local\Programs\Python\Python312\Lib\site-packages\gym\utils\passive_env_checker.py:219: DeprecationWarning: <span class="ansi-yellow-fg">WARN: Core environment is written in old step API which returns one bool instead of two. It is recommended to rewrite the environment with new step API. </span>
-  logger.deprecation(
-c:\Users\sethe\AppData\Local\Programs\Python\Python312\Lib\site-packages\gym\utils\passive_env_checker.py:225: DeprecationWarning: `np.bool8` is a deprecated alias for `np.bool_`.  (Deprecated NumPy 1.24)
-  if not isinstance(done, (bool, np.bool8)):
-</pre>
-</div>
-</div>
-<div class="jp-OutputArea-child">
-<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>----------------------------
-| time/              |     |
-|    fps             | 103 |
-|    iterations      | 1   |
-|    time_elapsed    | 1   |
-|    total_timesteps | 128 |
-----------------------------
------------------------------------------
-| time/                   |             |
-|    fps                  | 27          |
-|    iterations           | 2           |
-|    time_elapsed         | 9           |
-|    total_timesteps      | 256         |
-| train/                  |             |
-|    approx_kl            | 0.033081587 |
-|    clip_fraction        | 0.223       |
-|    clip_range           | 0.2         |
-|    entropy_loss         | -1.93       |
-|    explained_variance   | -0.00124    |
-|    learning_rate        | 0.0001      |
-|    loss                 | 192         |
-|    n_updates            | 4           |
-|    policy_gradient_loss | -0.00565    |
-|    value_loss           | 425         |
------------------------------------------
----------------------------------------
-| time/                   |           |
-|    fps                  | 20        |
-|    iterations           | 3         |
-|    time_elapsed         | 18        |
-|    total_timesteps      | 384       |
-| train/                  |           |
-|    approx_kl            | 0.0200424 |
-|    clip_fraction        | 0.0996    |
-|    clip_range           | 0.2       |
-|    entropy_loss         | -1.9      |
-|    explained_variance   | 0.0105    |
-|    learning_rate        | 0.0001    |
-|    loss                 | 20.4      |
-|    n_updates            | 8         |
-|    policy_gradient_loss | -0.00349  |
-|    value_loss           | 168       |
----------------------------------------
-----------------------------------------
-| time/                   |            |
-|    fps                  | 17         |
-|    iterations           | 4          |
-|    time_elapsed         | 28         |
-|    total_timesteps      | 512        |
-| train/                  |            |
-|    approx_kl            | 0.06563064 |
-|    clip_fraction        | 0.439      |
-|    clip_range           | 0.2        |
-|    entropy_loss         | -1.85      |
-|    explained_variance   | 0.069      |
-|    learning_rate        | 0.0001     |
-|    loss                 | 45.8       |
-|    n_updates            | 12         |
-|    policy_gradient_loss | 0.0115     |
-|    value_loss           | 98.6       |
-----------------------------------------
------------------------------------------
-| time/                   |             |
-|    fps                  | 16          |
-|    iterations           | 5           |
-|    time_elapsed         | 38          |
-|    total_timesteps      | 640         |
-| train/                  |             |
-|    approx_kl            | 0.019646216 |
-|    clip_fraction        | 0.143       |
-|    clip_range           | 0.2         |
-|    entropy_loss         | -1.83       |
-|    explained_variance   | 0.408       |
-|    learning_rate        | 0.0001      |
-|    loss                 | 34.6        |
-|    n_updates            | 16          |
-|    policy_gradient_loss | 0.000365    |
-|    value_loss           | 122         |
------------------------------------------
-----------------------------------------
-| time/                   |            |
-|    fps                  | 16         |
-|    iterations           | 6          |
-|    time_elapsed         | 47         |
-|    total_timesteps      | 768        |
-| train/                  |            |
-|    approx_kl            | 0.16857654 |
-|    clip_fraction        | 0.527      |
-|    clip_range           | 0.2        |
-|    entropy_loss         | -1.53      |
-|    explained_variance   | -0.0736    |
-|    learning_rate        | 0.0001     |
-|    loss                 | 172        |
-|    n_updates            | 20         |
-|    policy_gradient_loss | 0.0216     |
-|    value_loss           | 247        |
-----------------------------------------
-------------------------------------------
-| time/                   |              |
-|    fps                  | 15           |
-|    iterations           | 7            |
-|    time_elapsed         | 56           |
-|    total_timesteps      | 896          |
-| train/                  |              |
-|    approx_kl            | 0.0056644334 |
-|    clip_fraction        | 0.0801       |
-|    clip_range           | 0.2          |
-|    entropy_loss         | -1.45        |
-|    explained_variance   | -0.00282     |
-|    learning_rate        | 0.0001       |
-|    loss                 | 36.8         |
-|    n_updates            | 24           |
-|    policy_gradient_loss | -0.00324     |
-|    value_loss           | 145          |
-------------------------------------------
------------------------------------------
-| time/                   |             |
-|    fps                  | 15          |
-|    iterations           | 8           |
-|    time_elapsed         | 65          |
-|    total_timesteps      | 1024        |
-| train/                  |             |
-|    approx_kl            | 0.015888235 |
-|    clip_fraction        | 0.0234      |
-|    clip_range           | 0.2         |
-|    entropy_loss         | -1.4        |
-|    explained_variance   | -0.0211     |
-|    learning_rate        | 0.0001      |
-|    loss                 | 58.4        |
-|    n_updates            | 28          |
-|    policy_gradient_loss | -0.000523   |
-|    value_loss           | 133         |
------------------------------------------
-------------------------------------------
-| time/                   |              |
-|    fps                  | 15           |
-|    iterations           | 9            |
-|    time_elapsed         | 75           |
-|    total_timesteps      | 1152         |
-| train/                  |              |
-|    approx_kl            | 0.0054389173 |
-|    clip_fraction        | 0.104        |
-|    clip_range           | 0.2          |
-|    entropy_loss         | -1.63        |
-|    explained_variance   | -0.00162     |
-|    learning_rate        | 0.0001       |
-|    loss                 | 5.19         |
-|    n_updates            | 32           |
-|    policy_gradient_loss | -0.000293    |
-|    value_loss           | 44.8         |
-------------------------------------------
-------------------------------------------
-| time/                   |              |
-|    fps                  | 15           |
-|    iterations           | 10           |
-|    time_elapsed         | 85           |
-|    total_timesteps      | 1280         |
-| train/                  |              |
-|    approx_kl            | 0.0021641203 |
-|    clip_fraction        | 0.0156       |
-|    clip_range           | 0.2          |
-|    entropy_loss         | -1.49        |
-|    explained_variance   | -0.0177      |
-|    learning_rate        | 0.0001       |
-|    loss                 | 10.8         |
-|    n_updates            | 36           |
-|    policy_gradient_loss | 0.00707      |
-|    value_loss           | 70.1         |
-------------------------------------------
------------------------------------------
-| time/                   |             |
-|    fps                  | 14          |
-|    iterations           | 11          |
-|    time_elapsed         | 94          |
-|    total_timesteps      | 1408        |
-| train/                  |             |
-|    approx_kl            | 0.015707789 |
-|    clip_fraction        | 0.164       |
-|    clip_range           | 0.2         |
-|    entropy_loss         | -1.62       |
-|    explained_variance   | 0.0157      |
-|    learning_rate        | 0.0001      |
-|    loss                 | 3.93        |
-|    n_updates            | 40          |
-|    policy_gradient_loss | -0.0147     |
-|    value_loss           | 23          |
------------------------------------------
-----------------------------------------
-| time/                   |            |
-|    fps                  | 14         |
-|    iterations           | 12         |
-|    time_elapsed         | 103        |
-|    total_timesteps      | 1536       |
-| train/                  |            |
-|    approx_kl            | 0.00930596 |
-|    clip_fraction        | 0.0215     |
-|    clip_range           | 0.2        |
-|    entropy_loss         | -1.59      |
-|    explained_variance   | -0.0179    |
-|    learning_rate        | 0.0001     |
-|    loss                 | 7.64       |
-|    n_updates            | 44         |
-|    policy_gradient_loss | -0.00553   |
-|    value_loss           | 37.8       |
-----------------------------------------
-Mean reward: 680.0 ± 0.0
-</pre>
-</div>
-</div>
-</div>
-</div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=c6daca08">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [74]:</div>
-<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-<div class="cm-editor cm-s-jupyter">
-<div class="highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">gym</span>
-<span class="kn">import</span> <span class="nn">gym_super_mario_bros</span>
-<span class="kn">import</span> <span class="nn">time</span>
-<span class="kn">from</span> <span class="nn">nes_py.wrappers</span> <span class="kn">import</span> <span class="n">JoypadSpace</span>
-<span class="kn">from</span> <span class="nn">gym_super_mario_bros.actions</span> <span class="kn">import</span> <span class="n">SIMPLE_MOVEMENT</span>
-<span class="kn">from</span> <span class="nn">gym.wrappers</span> <span class="kn">import</span> <span class="n">StepAPICompatibility</span><span class="p">,</span> <span class="n">TimeLimit</span>
-<span class="kn">from</span> <span class="nn">stable_baselines3</span> <span class="kn">import</span> <span class="n">PPO</span>
-<span class="kn">from</span> <span class="nn">stable_baselines3.common.vec_env</span> <span class="kn">import</span> <span class="n">DummyVecEnv</span>
-<span class="kn">from</span> <span class="nn">stable_baselines3.common.evaluation</span> <span class="kn">import</span> <span class="n">evaluate_policy</span>
-<span class="kn">from</span> <span class="nn">stable_baselines3.common.callbacks</span> <span class="kn">import</span> <span class="n">EvalCallback</span><span class="p">,</span> <span class="n">CheckpointCallback</span>
-
-<span class="c1"># Create the Super Mario Bros. environment</span>
-<span class="n">env</span> <span class="o">=</span> <span class="n">gym</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="s1">'SuperMarioBros-v0'</span><span class="p">)</span>
-<span class="n">steps</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">_max_episode_steps</span>  <span class="c1"># get the original max_episode_steps count</span>
-
-<span class="c1"># Set the Joypad wrapper</span>
-<span class="n">env</span> <span class="o">=</span> <span class="n">JoypadSpace</span><span class="p">(</span><span class="n">env</span><span class="o">.</span><span class="n">env</span><span class="p">,</span> <span class="n">SIMPLE_MOVEMENT</span><span class="p">)</span>
-<span class="c1"># Overwrite the old reset to accept seeds and options args</span>
-<span class="n">env</span><span class="o">.</span><span class="n">reset</span> <span class="o">=</span> <span class="n">gymnasium_reset</span><span class="o">.</span><span class="fm">__get__</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">JoypadSpace</span><span class="p">)</span>
-
-<span class="c1"># Set TimeLimit back</span>
-<span class="n">env</span> <span class="o">=</span> <span class="n">TimeLimit</span><span class="p">(</span><span class="n">StepAPICompatibility</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">output_truncation_bool</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span> <span class="n">max_episode_steps</span><span class="o">=</span><span class="n">steps</span><span class="p">)</span>
-
-<span class="c1"># model = PPO.load("ppo_mario.zip")</span>
+<span class="c1"># uncomment to load saved trained model</span>
+<span class="c1"># model = PPO.load(os.path.join("trained_agents","ppo","ppo_mario_25000_steps.zip"))</span>
 
 <span class="n">max_x</span> <span class="o">=</span> <span class="mi">0</span>
 <span class="n">max_world</span> <span class="o">=</span> <span class="mi">0</span>
 <span class="n">max_stage</span> <span class="o">=</span> <span class="mi">0</span>
 
-
 <span class="n">obs</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
-<span class="k">for</span> <span class="n">step</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1500</span><span class="p">):</span>
-    <span class="n">action</span><span class="p">,</span> <span class="n">_states</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">obs</span><span class="o">.</span><span class="n">copy</span><span class="p">())</span>
-    <span class="n">action</span> <span class="o">=</span> <span class="n">action</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
+<span class="k">for</span> <span class="n">step</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2000</span><span class="p">):</span>
+    <span class="n">action</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">obs</span><span class="p">))</span>
+    <span class="n">action</span> <span class="o">=</span> <span class="n">action</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>       
     <span class="n">obs</span><span class="p">,</span> <span class="n">reward</span><span class="p">,</span> <span class="n">done</span><span class="p">,</span> <span class="n">truncated</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">action</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">info</span><span class="p">[</span><span class="s1">'world'</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">max_world</span><span class="p">:</span>
         <span class="n">max_world</span> <span class="o">=</span> <span class="n">info</span><span class="p">[</span><span class="s1">'world'</span><span class="p">]</span>
@@ -8356,9 +8255,10 @@ Mean reward: 680.0 ± 0.0
     <span class="k">elif</span> <span class="n">info</span><span class="p">[</span><span class="s1">'stage'</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">max_stage</span><span class="p">:</span>
         <span class="n">max_stage</span> <span class="o">=</span> <span class="n">info</span><span class="p">[</span><span class="s1">'stage'</span><span class="p">]</span>
         <span class="n">max_x</span> <span class="o">=</span> <span class="mi">0</span>
-    <span class="k">elif</span> <span class="n">info</span><span class="p">[</span><span class="s1">'x_pos'</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">max_x</span><span class="p">:</span>
+    <span class="k">elif</span> <span class="n">info</span><span class="p">[</span><span class="s1">'world'</span><span class="p">]</span> <span class="o">==</span> <span class="n">max_world</span> <span class="ow">and</span> <span class="n">info</span><span class="p">[</span><span class="s1">'stage'</span><span class="p">]</span> <span class="o">==</span> <span class="n">max_stage</span> <span class="ow">and</span> <span class="n">info</span><span class="p">[</span><span class="s1">'x_pos'</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">max_x</span><span class="p">:</span>
         <span class="n">max_x</span> <span class="o">=</span> <span class="n">info</span><span class="p">[</span><span class="s1">'x_pos'</span><span class="p">]</span>
     <span class="n">env</span><span class="o">.</span><span class="n">render</span><span class="p">()</span>
+    <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.05</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">done</span><span class="p">:</span>
         <span class="n">obs</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
 
@@ -8372,21 +8272,6 @@ Mean reward: 680.0 ± 0.0
 </div>
 </div>
 </div>
-<div class="jp-Cell-outputWrapper">
-<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
-</div>
-<div class="jp-OutputArea jp-Cell-outputArea">
-<div class="jp-OutputArea-child">
-<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>Max X: 595
-Max World: 1
-Max Stage: 1
-</pre>
-</div>
-</div>
-</div>
-</div>
 </div>
 <div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=36d4def3">
 <div class="jp-Cell-inputWrapper" tabindex="0">
@@ -8394,10 +8279,70 @@ Max Stage: 1
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<video controls="" height="240" width="320">
-<source src="./images/PPO_agent.mp4" type="video/mp4"/>
-</video>
-<p>This PPO agent is, unfortunately, unable to clear the pipe at the 595 X value. This fairs about as well as the random agent, and not as good as the heuristic agent. Given more timesteps, the agent could learn how to get farther, however let us try to create better reflexive learning agent using the Q learning algorithm.</p>
+<p><img alt="image" src="images/initial_ppo.gif"/></p>
+<p>With the default PPO model values, the agent is unable to clear the pipe at the 595 X coordinate. I allowed the agent to train for 100,000 episodes hoping it would figure out that keeping the A button held down would lead to a higher jump, allowing it to continue to the right. Unfortunately, after 100,000 iterations, the model instead runs directly into the first goomba over and over.</p>
+<p><img alt="image" src="images/goomba_death.gif"/></p>
+<p>I attempted to fine tune the learning rate using a scheduler, fine tuning the gamma and clip values, as well as included an entropy coefficient to encourage exploration to no avail. Even with a large entropy coefficient, the model was not able to get over the pipe by chance. In retrospect, this is consistent with the behavior with our random agent, as the chances of stringing together several A button presses while also holding right for forward momentum could be rather unlikely. Even with the addition of frame skipping, which causes the agent to perform an action for every four frames, the agent was unable to clear the pipe in any of the learning episodes.</p>
+<p><strong>Because of this, the agent always gets stuck at either the first or second pipe and accrues penalties for the clock ticking down with no forward progress, per the default reward structure. After 100,000 episodes, the agent seems to learn that in order to avoid this penalty, it is more optimal to run directly into the first goomba, receiving a smaller penalty from taking a death than the accrued penalty it receives from getting stuck at the pipe.</strong></p>
+<p>To counteract this, I added a new Gym environment wrapper that returns a new reward function. Learning from the heuristic agent, I believe Mario will both progress farther and avoid death more if he spends more time jumping. Because of this, I added a reward if Mario's change in Y-value is positive (meaning he is ascending). This should hopefully incentivize the agent to continuously press the A button and increase the chances that it is able to clear any tall pipes.</p>
+<p>Additionally, I chose to give a heavy penalty and terminate the episode when the agent dies, which should discourage the agent from exploiting any rewards it receives from taking an intentional death.</p>
+<p>Lastly, I added an incentive for the agent if the 'get_flag' bool is true, further incentivizing the agent to complete the level.</p>
+<p>Lastly, I normalized the returned reward based on the average reward of the episode in order to stabilize the learning process while I made adjustments:</p>
+<div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">CustStepReward</span><span class="p">(</span><span class="n">Wrapper</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">env</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">prev_y_pos</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">reward_mean</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">reward_var</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_rewards</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="k">def</span> <span class="nf">step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">):</span>
+        <span class="n">done</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">next_state</span><span class="p">,</span> <span class="n">reward</span><span class="p">,</span> <span class="n">done</span><span class="p">,</span> <span class="n">truncated</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">action</span><span class="p">)</span>
+        <span class="c1"># create custom reward value</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">prev_y_pos</span> <span class="o">&lt;</span> <span class="n">info</span><span class="p">[</span><span class="s1">'y_pos'</span><span class="p">]:</span>
+            <span class="n">reward</span> <span class="o">+=</span> <span class="mi">4</span> <span class="c1"># incentivize being airborn</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">prev_y_pos</span> <span class="o">=</span> <span class="n">info</span><span class="p">[</span><span class="s1">'y_pos'</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">info</span><span class="p">[</span><span class="s1">'life'</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="n">reward</span> <span class="o">-=</span> <span class="mi">50</span> <span class="c1"># heavily penalize death and end the episode</span>
+            <span class="n">done</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">if</span> <span class="n">info</span><span class="p">[</span><span class="s1">'flag_get'</span><span class="p">]:</span>
+            <span class="n">reward</span> <span class="o">+=</span> <span class="mi">100</span> <span class="c1"># heavily incentivize beating the level</span>
+        
+        <span class="c1"># Update reward statistics</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_rewards</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="n">old_mean</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">reward_mean</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">reward_mean</span> <span class="o">+=</span> <span class="p">(</span><span class="n">reward</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">reward_mean</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_rewards</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">reward_var</span> <span class="o">+=</span> <span class="p">(</span><span class="n">reward</span> <span class="o">-</span> <span class="n">old_mean</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">reward</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">reward_mean</span><span class="p">)</span>
+        
+        <span class="c1"># Normalize reward</span>
+        <span class="n">reward_std</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">reward_var</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_rewards</span><span class="p">)</span>
+        <span class="n">normalized_reward</span> <span class="o">=</span> <span class="p">(</span><span class="n">reward</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">reward_mean</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">reward_std</span> <span class="o">+</span> <span class="mf">1e-8</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">next_state</span><span class="p">,</span> <span class="n">normalized_reward</span><span class="p">,</span> <span class="n">done</span><span class="p">,</span> <span class="n">truncated</span><span class="p">,</span> <span class="n">info</span>
+</pre></div>
+<p>The end result worked as expected, and the agent was able to get farther in the level after training for 100,000 episodes. <strong>However, after training for 400,000 episodes, the model again resorted to exploitation, this time using the reward for increasing y position. The reward it received for this outweighed the penalty for staying still and it found that the optimal policy was to stay in one place and jump continuously over and over to accrue rewards until the time ran out.</strong></p>
+<p><img alt="image" src="images/left_model.gif"/></p>
+<p>To fix this, I revised the reward function again to only reward increasing y position if already in a jumping state and scale this reward by the number of successive A presses. This should hopefully encourage the agent to jump higher to gain a higher reward:</p>
+<div class="highlight"><pre><span></span><span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">prev_y_pos</span> <span class="o">&lt;</span> <span class="n">info</span><span class="p">[</span><span class="s1">'y_pos'</span><span class="p">]:</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">succesive_A_presses</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="n">reward</span> <span class="o">+=</span> <span class="mi">2</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">succesive_A_presses</span> <span class="c1"># incentivize jumping higher if already jumping</span>
+<span class="c1"># agent is not rising</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="c1"># reset to 0</span>
+    <span class="c1"># no reward (and no penalty)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">succesive_A_presses</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="bp">self</span><span class="o">.</span><span class="n">prev_y_pos</span> <span class="o">=</span> <span class="n">info</span><span class="p">[</span><span class="s1">'y_pos'</span><span class="p">]</span>
+</pre></div>
+<p>Additionally, I simplified the movement actions to only <code>Right + B</code> for running right, and <code>Right + B + A</code> for a running jump.</p>
+<div class="highlight"><pre><span></span><span class="n">CUSTOM_ACTIONS</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">[</span><span class="s1">'right'</span><span class="p">,</span> <span class="s1">'A'</span><span class="p">,</span> <span class="s1">'B'</span><span class="p">],</span>
+    <span class="p">[</span><span class="s1">'right'</span><span class="p">,</span><span class="s1">'B'</span><span class="p">]</span>
+<span class="p">]</span>
+</pre></div>
+<p>While this simplification may make it harder for the agent to avoid enemies, it is more in alignment with the heuristic agent we used as a baseline and should hopefully allow the agent to make better progress.</p>
+<p>With these revisions, the agent was able to complete the level and even get a bit farther after 600,000 training steps, without taking any deaths (per the harsh penalty implemented in the revised reward function).</p>
+<p><img alt="image" src="images/ppo_final.gif"/></p>
+<p>This reward function seems to work as intedned and the model learns with quite a bit of stability. Given enough iterations, I believe the model would continue to improve and progress farther into the game.</p>
 </div>
 </div>
 </div>
@@ -8420,8 +8365,9 @@ Max Stage: 1
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<p>Now, let us create our own Q-Learning agent. This is the meat of this project, so get ready to strap in. A huge thank you to Sourish Kundu, who made a video on how to do exactly this with some great explanations (Kundo, 2023). If you have a chance, I highly recommend giving it a watch, even if you are not working with this gym environment, as it gives some great explanations of general concepts we have been discussing in class.</p>
+<p>To compare with the Stable Baseling3 PPO agent, I also create a Q-Learning agent. As referenced before, a huge thank you to Sourish Kundu, who made a video on how to do exactly this with some great explanations (Kundu, 2023). If you have a chance, I highly recommend giving it a watch, even if you are not working with this gym environment, as it gives some great explanations of general concepts we have been discussing in class.</p>
 <p><a href="https://www.youtube.com/watch?v=_gmQZToTMac">https://www.youtube.com/watch?v=_gmQZToTMac</a></p>
+<p><a href="https://github.com/Sourish07/Super-Mario-Bros-RL">https://github.com/Sourish07/Super-Mario-Bros-RL</a></p>
 </div>
 </div>
 </div>
@@ -8432,16 +8378,17 @@ Max Stage: 1
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<p>We can begin by creating our own environment wrapper to skip four frames. Additionally, we will reduce the frame resolution, convert the frames to grayscale, and stack four frames. This will assist in reducing the complexity of the environment.</p>
+<p>We can begin by creating the same wrappers as before. Initially, I used these wrappers for the Q-Learning model and applied them to the PPO model after the fact. We again skip 4 frames, rescale and reduce the images to gray scale while stacking 4 frames. I am also including the previous reward wrapper used in the PPO model before applying all these wrappers together in the function <code>apply_wrappers</code> that returns the environment utilizing all of the environment wrappers.</p>
+<p>One note is that the following algorithm requires gym version 0.24.0 as the returns of the reset function need to be a single value, as opposed to the tuple returned in later versions. Overriding the reset function does not work, as several of the necessary wraooers and Python modules are not compatible with the newer versions of gym. If you are attempting to run this cell, you will receive an error unless you run <code>pip install gym==0.24.0</code> first.</p>
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=69e710d3">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=69e710d3">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [82]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [1]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
@@ -8464,24 +8411,68 @@ Max Stage: 1
             <span class="k">if</span> <span class="n">done</span><span class="p">:</span>
                 <span class="k">break</span>
         <span class="k">return</span> <span class="n">next_state</span><span class="p">,</span> <span class="n">reward_accum</span><span class="p">,</span> <span class="n">done</span><span class="p">,</span> <span class="n">info</span>
-<span class="w">    </span>
-<span class="w">    </span><span class="sd">'''</span>
-<span class="sd">    def reset(self):</span>
-<span class="sd">        state = self.env.reset()</span>
-<span class="sd">        print(state)</span>
-<span class="sd">        # Assuming we want to stack 'skip' frames</span>
-<span class="sd">        state = [state] * self.skip</span>
-<span class="sd">        state = np.stack(state, axis=0)</span>
-<span class="sd">        return state</span>
-<span class="sd">    '''</span>
+    
+<span class="k">class</span> <span class="nc">CustStepReward</span><span class="p">(</span><span class="n">Wrapper</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">env</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">prev_y_pos</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">reward_mean</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">reward_var</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_rewards</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">succesive_A_presses</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="k">def</span> <span class="nf">step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">):</span>
+        <span class="n">done</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">next_state</span><span class="p">,</span> <span class="n">reward</span><span class="p">,</span> <span class="n">done</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">action</span><span class="p">)</span>
+        <span class="c1"># if rising, agent must have pressed A state before</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">prev_y_pos</span> <span class="o">&lt;</span> <span class="n">info</span><span class="p">[</span><span class="s1">'y_pos'</span><span class="p">]:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">succesive_A_presses</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="n">reward</span> <span class="o">+=</span> <span class="mi">2</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">succesive_A_presses</span> <span class="c1"># incentivize jumping higher if already jumping</span>
+        <span class="c1"># agent is not rising</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># reset to 0</span>
+            <span class="c1"># no reward (and no penalty)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">succesive_A_presses</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">prev_y_pos</span> <span class="o">=</span> <span class="n">info</span><span class="p">[</span><span class="s1">'y_pos'</span><span class="p">]</span>
+        
+        <span class="k">if</span> <span class="n">info</span><span class="p">[</span><span class="s1">'life'</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="n">reward</span> <span class="o">-=</span> <span class="mi">50</span> <span class="c1"># heavily penalize death and end the episode</span>
+            <span class="n">done</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">if</span> <span class="n">info</span><span class="p">[</span><span class="s1">'flag_get'</span><span class="p">]:</span>
+            <span class="n">reward</span> <span class="o">+=</span> <span class="mi">100</span> <span class="c1"># heavily incentivize beating the level</span>
+        
+        <span class="c1"># Update reward statistics</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_rewards</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="n">old_mean</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">reward_mean</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">reward_mean</span> <span class="o">+=</span> <span class="p">(</span><span class="n">reward</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">reward_mean</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_rewards</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">reward_var</span> <span class="o">+=</span> <span class="p">(</span><span class="n">reward</span> <span class="o">-</span> <span class="n">old_mean</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">reward</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">reward_mean</span><span class="p">)</span>
+        
+        <span class="c1"># Normalize reward</span>
+        <span class="n">reward_std</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">reward_var</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_rewards</span><span class="p">)</span>
+        <span class="n">normalized_reward</span> <span class="o">=</span> <span class="nb">float</span><span class="p">((</span><span class="n">reward</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">reward_mean</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">reward_std</span> <span class="o">+</span> <span class="mf">1e-8</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">next_state</span><span class="p">,</span> <span class="n">normalized_reward</span><span class="p">,</span> <span class="n">done</span><span class="p">,</span> <span class="n">info</span>
 
 <span class="k">def</span> <span class="nf">apply_wrappers</span><span class="p">(</span><span class="n">env</span><span class="p">):</span>
     <span class="n">env</span> <span class="o">=</span> <span class="n">SkipFrame</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">skip</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span> <span class="c1"># skip every four frames</span>
     <span class="n">env</span> <span class="o">=</span> <span class="n">ResizeObservation</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="mi">84</span><span class="p">)</span> <span class="c1"># reduce size of frame image</span>
     <span class="n">env</span> <span class="o">=</span> <span class="n">GrayScaleObservation</span><span class="p">(</span><span class="n">env</span><span class="p">)</span> <span class="c1"># create grayscale images</span>
     <span class="n">env</span> <span class="o">=</span> <span class="n">FrameStack</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">num_stack</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">lz4_compress</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="c1"># stack frames (4 skipped)</span>
+    <span class="n">env</span> <span class="o">=</span> <span class="n">CustStepReward</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">env</span>
 </pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell-outputWrapper">
+<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+</div>
+<div class="jp-OutputArea jp-Cell-outputArea">
+<div class="jp-OutputArea-child">
+<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
+<pre>Warning: Gym version v0.24.0 has a number of critical issues with `gym.make` such that the `reset` and `step` functions are called before returning the environment. It is recommend to downgrading to v0.23.1 or upgrading to v0.25.1
+</pre>
 </div>
 </div>
 </div>
@@ -8493,8 +8484,9 @@ Max Stage: 1
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<p>Next, we will create our own neural network agent using convolution layers and linear layers. We are using Conv2d layers with Relu activation functions, as these are typically appropriate for images (as I learned from HW5). Using MaxPool2d will reduce spatial dimensions and lower computational cost, which will hopefully lower the processing time for our algorithm.</p>
+<p>Instead of using a default neural network, we will create our own using convolution layers and linear layers. We are using Conv2d layers with Relu activation functions, as these are typically appropriate for images (as I learned from HW5). Using MaxPool2d will reduce spatial dimensions and lower computational cost, which will hopefully lower the processing time for our algorithm.</p>
 <p>Additional methods are used to dynamically evaluate the input shape for our initial linear layer (<code>_get_conv_out</code>), prevent pytorch from updating the gradients if frozen (<code>_freeze</code>), and tell pytorch how to handle the forward pass for each tensor (<code>forward</code>).</p>
+<p>I reduced the complexity of the architecture from Sourish's video to improve processing speed, but much of the structure of the attributes and methods were influenced heavily by his example.</p>
 </div>
 </div>
 </div>
@@ -8503,7 +8495,7 @@ Max Stage: 1
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [83]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [2]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">torch</span>
@@ -8570,7 +8562,7 @@ Max Stage: 1
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<p>Next, we will create our agent class to use the neural network created previously.</p>
+<p>Next, we will create our agent class to use the neural network created previously:</p>
 </div>
 </div>
 </div>
@@ -8579,7 +8571,7 @@ Max Stage: 1
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [94]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [3]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">torch</span>
@@ -8598,7 +8590,7 @@ Max Stage: 1
                  <span class="n">epsilon</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> 
                  <span class="n">eps_decay</span><span class="o">=</span><span class="mf">0.99999975</span><span class="p">,</span> 
                  <span class="n">eps_min</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> 
-                 <span class="n">replay_buffer_capacity</span><span class="o">=</span><span class="mi">75000</span><span class="p">,</span> 
+                 <span class="n">replay_buffer_capacity</span><span class="o">=</span><span class="mi">150000</span><span class="p">,</span> 
                  <span class="n">batch_size</span><span class="o">=</span><span class="mi">32</span><span class="p">,</span> 
                  <span class="n">sync_network_rate</span><span class="o">=</span><span class="mi">10000</span>
                  <span class="p">):</span>
@@ -8725,19 +8717,37 @@ Max Stage: 1
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<p>We now have everything we need to create the environment and run our reinforcement learning architecture.</p>
+<p>This class performs an approximate mathematical implementation of the Bellman Equation for calculating Q-values for each state-action pair:</p>
+<p>$Q(s, a) \leftarrow Q(s, a) + \alpha \left[ r + \gamma \max_{a'} Q(s', a') - Q(s, a) \right]$</p>
+<p>As seen here:</p>
+<div class="highlight"><pre><span></span><span class="n">target_q_values</span> <span class="o">=</span> <span class="n">rewards</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">gamma</span> <span class="o">*</span> <span class="n">target_q_values</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">dones</span><span class="o">.</span><span class="n">float</span><span class="p">())</span>
+</pre></div>
+<p>PyTorch's built-in Mean Squared Error loss function is applied between predicted and target Q-values:</p>
+<div class="highlight"><pre><span></span><span class="bp">self</span><span class="o">.</span><span class="n">losss</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">MSE</span><span class="p">()</span>
+</pre></div>
+<div class="highlight"><pre><span></span><span class="n">loss</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">loss</span><span class="p">(</span><span class="n">predicted_q_values</span><span class="p">,</span> <span class="n">target_q_values</span><span class="p">)</span>
+</pre></div>
+<p>This is then minimized using backpropagation in</p>
+<div class="highlight"><pre><span></span><span class="n">loss</span><span class="o">.</span><span class="n">backward</span><span class="p">();</span> <span class="bp">self</span><span class="o">.</span><span class="n">optimizer</span><span class="o">.</span><span class="n">step</span><span class="p">()</span> <span class="ow">in</span> <span class="n">learn</span><span class="p">())</span><span class="err">`</span><span class="o">.</span>
+</pre></div>
+<p>The agent selects actions using an epsilon-greedy policy  as seen in the <code>choose_action()</code> function, where the epsilon value represents the probability the model chooses a random action, selecting the action with the highest Q-value the rest of the time. This epsilon value decays overtime as seen here:</p>
+<div class="highlight"><pre><span></span><span class="bp">self</span><span class="o">.</span><span class="n">epsilon</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">epsilon</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">eps_decay</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">eps_min</span><span class="err">`</span>
+</pre></div>
+<p>To stabilize learning, the agent periodically synchronizes the target network with the online network <code>self.sync_networks()</code>, copying the weights from the online network to the target network after a certain number of steps.</p>
+<p>We now have everything we need to create the environment and run our reinforcement learning architecture:</p>
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=d7554543">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=d7554543">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [101]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
-<div class="highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">gym_super_mario_bros</span>
+<div class="highlight hl-ipython3"><pre><span></span><span class="c1"># Train the model</span>
+<span class="kn">import</span> <span class="nn">gym_super_mario_bros</span>
 <span class="kn">from</span> <span class="nn">gym_super_mario_bros.actions</span> <span class="kn">import</span> <span class="n">RIGHT_ONLY</span>
 <span class="kn">from</span> <span class="nn">nes_py.wrappers</span> <span class="kn">import</span> <span class="n">JoypadSpace</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
@@ -8751,17 +8761,22 @@ Max Stage: 1
 <span class="kn">from</span> <span class="nn">nes_py.wrappers</span> <span class="kn">import</span> <span class="n">JoypadSpace</span>
 
 <span class="n">ENV_NAME</span> <span class="o">=</span> <span class="s1">'SuperMarioBros-1-1-v0'</span>
-<span class="n">SHOULD_TRAIN</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="n">SAVE_INTERVAL</span> <span class="o">=</span> <span class="mi">1000</span>
 <span class="n">DISPLAY</span> <span class="o">=</span> <span class="kc">True</span>
-<span class="n">NUM_OF_EPISODES</span> <span class="o">=</span> <span class="mi">5</span>
+<span class="n">NUM_OF_EPISODES</span> <span class="o">=</span> <span class="mi">100000</span>
+
+<span class="n">CUSTOM_ACTIONS</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">[</span><span class="s1">'right'</span><span class="p">,</span><span class="s1">'A'</span><span class="p">,</span><span class="s1">'B'</span><span class="p">],</span>
+    <span class="p">[</span><span class="s1">'right'</span><span class="p">,</span><span class="s1">'B'</span><span class="p">]</span>
+<span class="p">]</span>
 
 <span class="n">env</span> <span class="o">=</span> <span class="n">gym_super_mario_bros</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="n">ENV_NAME</span><span class="p">)</span>
-<span class="n">env</span> <span class="o">=</span> <span class="n">JoypadSpace</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">RIGHT_ONLY</span><span class="p">)</span>
-
+<span class="n">env</span> <span class="o">=</span> <span class="n">JoypadSpace</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">CUSTOM_ACTIONS</span><span class="p">)</span>
 <span class="n">env</span> <span class="o">=</span> <span class="n">apply_wrappers</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
 
 <span class="n">agent</span> <span class="o">=</span> <span class="n">Agent</span><span class="p">(</span><span class="n">input_dims</span><span class="o">=</span><span class="n">env</span><span class="o">.</span><span class="n">observation_space</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">num_actions</span><span class="o">=</span><span class="n">env</span><span class="o">.</span><span class="n">action_space</span><span class="o">.</span><span class="n">n</span><span class="p">)</span>
 
+<span class="c1"># create a progress bar when training</span>
 <span class="k">def</span> <span class="nf">print_progress</span><span class="p">(</span><span class="n">cur</span><span class="p">,</span><span class="n">end</span><span class="p">,</span> <span class="n">bar_length</span><span class="o">=</span><span class="mi">40</span><span class="p">):</span>
     <span class="n">progress</span> <span class="o">=</span> <span class="n">cur</span> <span class="o">/</span> <span class="n">end</span>
     <span class="n">block</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">bar_length</span> <span class="o">*</span> <span class="n">progress</span><span class="p">))</span>
@@ -8781,21 +8796,12 @@ Max Stage: 1
 
         <span class="n">state</span> <span class="o">=</span> <span class="n">new_state</span>
 
+        <span class="c1"># save the model every save interval</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="n">SAVE_INTERVAL</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">agent</span><span class="o">.</span><span class="n">save_model</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">"trained_agents\q_learning"</span><span class="p">,</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="s2">"_q_agent.pt"</span><span class="p">))</span>
+
 <span class="n">env</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 </pre></div>
-</div>
-</div>
-</div>
-</div>
-<div class="jp-Cell-outputWrapper">
-<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
-</div>
-<div class="jp-OutputArea jp-Cell-outputArea">
-<div class="jp-OutputArea-child">
-<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>Memory Usage: 4956.05 MB
-Currently processing episode 5/5 [########################################] 100.00%</pre>
 </div>
 </div>
 </div>
@@ -8805,10 +8811,11 @@ Currently processing episode 5/5 [########################################] 100.
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [105]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [10]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
-<div class="highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">gym_super_mario_bros</span>
+<div class="highlight hl-ipython3"><pre><span></span><span class="c1"># Test the model</span>
+<span class="kn">import</span> <span class="nn">gym_super_mario_bros</span>
 <span class="kn">from</span> <span class="nn">gym_super_mario_bros.actions</span> <span class="kn">import</span> <span class="n">RIGHT_ONLY</span>
 <span class="kn">from</span> <span class="nn">nes_py.wrappers</span> <span class="kn">import</span> <span class="n">JoypadSpace</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
@@ -8826,15 +8833,25 @@ Currently processing episode 5/5 [########################################] 100.
 <span class="n">DISPLAY</span> <span class="o">=</span> <span class="kc">True</span>
 <span class="n">NUM_OF_EPISODES</span> <span class="o">=</span> <span class="mi">5</span>
 
-<span class="n">env</span> <span class="o">=</span> <span class="n">gym_super_mario_bros</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="n">ENV_NAME</span><span class="p">)</span>
-<span class="n">env</span> <span class="o">=</span> <span class="n">JoypadSpace</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">RIGHT_ONLY</span><span class="p">)</span>
+<span class="n">CUSTOM_ACTIONS</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">[</span><span class="s1">'right'</span><span class="p">,</span> <span class="s1">'A'</span><span class="p">,</span> <span class="s1">'B'</span><span class="p">],</span>
+    <span class="p">[</span><span class="s1">'right'</span><span class="p">,</span><span class="s1">'B'</span><span class="p">]</span>
+<span class="p">]</span>
 
+<span class="n">env</span> <span class="o">=</span> <span class="n">gym_super_mario_bros</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="n">ENV_NAME</span><span class="p">)</span>
+<span class="n">env</span> <span class="o">=</span> <span class="n">JoypadSpace</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">CUSTOM_ACTIONS</span><span class="p">)</span>
 <span class="n">env</span> <span class="o">=</span> <span class="n">apply_wrappers</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
 
 <span class="n">agent</span> <span class="o">=</span> <span class="n">Agent</span><span class="p">(</span><span class="n">input_dims</span><span class="o">=</span><span class="n">env</span><span class="o">.</span><span class="n">observation_space</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">num_actions</span><span class="o">=</span><span class="n">env</span><span class="o">.</span><span class="n">action_space</span><span class="o">.</span><span class="n">n</span><span class="p">)</span>
 
+<span class="n">agent</span><span class="o">.</span><span class="n">load_model</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">"trained_agents"</span><span class="p">,</span><span class="s2">"q_learning"</span><span class="p">,</span><span class="s2">"27000_q_agent.pt"</span><span class="p">))</span>
+
+<span class="n">max_x</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">max_world</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">max_stage</span> <span class="o">=</span> <span class="mi">0</span>
+
 <span class="n">state</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
-<span class="k">for</span> <span class="n">step</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1500</span><span class="p">):</span>
+<span class="k">for</span> <span class="n">step</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">5000</span><span class="p">):</span>
     <span class="n">action</span> <span class="o">=</span> <span class="n">agent</span><span class="o">.</span><span class="n">choose_action</span><span class="p">(</span><span class="n">state</span><span class="p">)</span>
     <span class="n">state</span><span class="p">,</span> <span class="n">reward</span><span class="p">,</span> <span class="n">done</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">action</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">info</span><span class="p">[</span><span class="s1">'world'</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">max_world</span><span class="p">:</span>
@@ -8844,7 +8861,7 @@ Currently processing episode 5/5 [########################################] 100.
     <span class="k">elif</span> <span class="n">info</span><span class="p">[</span><span class="s1">'stage'</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">max_stage</span><span class="p">:</span>
         <span class="n">max_stage</span> <span class="o">=</span> <span class="n">info</span><span class="p">[</span><span class="s1">'stage'</span><span class="p">]</span>
         <span class="n">max_x</span> <span class="o">=</span> <span class="mi">0</span>
-    <span class="k">elif</span> <span class="n">info</span><span class="p">[</span><span class="s1">'x_pos'</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">max_x</span><span class="p">:</span>
+    <span class="k">elif</span> <span class="n">info</span><span class="p">[</span><span class="s1">'world'</span><span class="p">]</span> <span class="o">==</span> <span class="n">max_world</span> <span class="ow">and</span> <span class="n">info</span><span class="p">[</span><span class="s1">'stage'</span><span class="p">]</span> <span class="o">==</span> <span class="n">max_stage</span> <span class="ow">and</span> <span class="n">info</span><span class="p">[</span><span class="s1">'x_pos'</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">max_x</span><span class="p">:</span>
         <span class="n">max_x</span> <span class="o">=</span> <span class="n">info</span><span class="p">[</span><span class="s1">'x_pos'</span><span class="p">]</span>
     <span class="n">env</span><span class="o">.</span><span class="n">render</span><span class="p">()</span>
     <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.02</span><span class="p">)</span>
@@ -8868,12 +8885,43 @@ Currently processing episode 5/5 [########################################] 100.
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>Memory Usage: 5874.73 MB
-Max X: 898
-Max World: 1
-Max Stage: 2
+<pre>Memory Usage: 436.52 MB
 </pre>
 </div>
+</div>
+<div class="jp-OutputArea-child">
+<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
+<pre>C:\Users\sethe\AppData\Local\Temp\ipykernel_20728\3851061806.py:93: FutureWarning: You are using `torch.load` with `weights_only=False` (the current default value), which uses the default pickle module implicitly. It is possible to construct malicious pickle data which will execute arbitrary code during unpickling (See https://github.com/pytorch/pytorch/blob/main/SECURITY.md#untrusted-models for more details). In a future release, the default value for `weights_only` will be flipped to `True`. This limits the functions that could be executed during unpickling. Arbitrary objects will no longer be allowed to be loaded via this mode unless they are explicitly allowlisted by the user via `torch.serialization.add_safe_globals`. We recommend you start setting `weights_only=True` for any use case where you don't have full control of the loaded file. Please open an issue on GitHub for any issues related to this experimental feature.
+  self.online_network.load_state_dict(torch.load(path))
+C:\Users\sethe\AppData\Local\Temp\ipykernel_20728\3851061806.py:94: FutureWarning: You are using `torch.load` with `weights_only=False` (the current default value), which uses the default pickle module implicitly. It is possible to construct malicious pickle data which will execute arbitrary code during unpickling (See https://github.com/pytorch/pytorch/blob/main/SECURITY.md#untrusted-models for more details). In a future release, the default value for `weights_only` will be flipped to `True`. This limits the functions that could be executed during unpickling. Arbitrary objects will no longer be allowed to be loaded via this mode unless they are explicitly allowlisted by the user via `torch.serialization.add_safe_globals`. We recommend you start setting `weights_only=True` for any use case where you don't have full control of the loaded file. Please open an issue on GitHub for any issues related to this experimental feature.
+  self.target_network.load_state_dict(torch.load(path))
+</pre>
+</div>
+</div>
+<div class="jp-OutputArea-child">
+<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
+<pre>Max X: 1967
+Max World: 1
+Max Stage: 1
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=52f7fa66">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<p><img alt="image" src="images/q_27000.gif"/></p>
+<p>WIth only 27,000 training episodes, the Q Learning algorithm is able to take advantage of the height reward and is clearing the tall pipes and the first gap. Given enough iterations, I believe this algorithm would show similar, if not better results than our PPO algorithm. However, it took almost 24 hours to just get this number of iterations when I could get 20 times the number of episodes with the PPO algorithm.</p>
+<p>The main difference between PPO and Q-Learning, besides the processing time, is in their approach to policy optimization and exploration. PPO is a policy-based method that directly optimizes actions, mapping the best action to take for any given game state. Q-Learning is value-based, focusing on learning state-action values. Because of this, PPO is better at determining continuous action spaces, whereas Q-Learning is better suited for discrete action spaces. Limiting the number of chosen actions to only those that allow Mario to progress (right + B + A and right + B) may have worked well for both models given it creates a more discrete action space.</p>
+<p>My initial PPO algorithm was more prone to exploitation, which caused me to fine-tune the environment's reward value function and incorporate an entropy coefficient to encourage the agent to explore. In the same way, Q-Learning uses an epsilon greedy function that chooses a random action some of the time, taking the the action with the highest q-value the rest of the time. Using the more balanced reward function and set of actions taken from tuning the PPO algorithm assisted in stabilizing the Q-Learning model without as much trial and error. This was significant, especially given the the costly time to process the Q-Learning model as opposed to the PPO model.</p>
+<p>In contrast, optimizations I found for the Q-Learning model to decrease computational complexity, such as frame skipping/stacking, image size reduction, grayscaling and not to mention configuring the modules to use the GPU, were able to be applied to the PPO model, making it even faster and allowing me to run even more iterations to easily fine tune the parameters and check the results.</p>
 </div>
 </div>
 </div>
@@ -8896,46 +8944,58 @@ Max Stage: 2
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<p><em>show the result and interpretation of your experiment. Any iterative improvements summary.</em></p>
-<ol start="5">
-<li>Does it include the results summary, interpretation of experiments and visualization (e.g. performance comparison table, graphs etc)? (7)</li>
-</ol>
 <table>
 <thead>
 <tr>
-<th>Name of Agent</th>
-<th>Max Level</th>
+<th>Model</th>
+<th>Video of Model Predictions</th>
+<th>Notes</th>
 <th>Max World</th>
+<th>Max Level</th>
 <th>Max X Position</th>
+<th>Number of Training Steps</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>Random Agent</td>
+<td><strong>Random Agent</strong></td>
+<td><img alt="image" src="images/random_agent.gif"/></td>
+<td>Environment is working, but agent cannot progress far with random actions.</td>
 <td>1</td>
 <td>1</td>
 <td>595</td>
+<td>N/A</td>
 </tr>
 <tr>
-<td>Heuristic Agent</td>
+<td><strong>Heuristic Agent</strong></td>
+<td><img alt="image" src="images/heuristic_agent.gif"/></td>
+<td>Agent wins using strategy and luck (not reinforcement learning)</td>
 <td>1</td>
 <td>2</td>
-<td>320</td>
+<td>199</td>
+<td>N/A</td>
 </tr>
 <tr>
-<td>Basic PPO Agent</td>
+<td><strong>PPO Agent</strong></td>
+<td><img alt="image" src="images/ppo_final.gif"/></td>
+<td>Refining reward function keeps the agent from exploiting default rewards with unintended behavior</td>
 <td>1</td>
-<td>1</td>
-<td>595</td>
+<td>2</td>
+<td>482</td>
+<td>600,000 (processed in 6 hours)</td>
 </tr>
 <tr>
-<td>Q Learning Agent</td>
-<td>???</td>
-<td>???</td>
-<td>???</td>
+<td><strong>Q Learning Agent</strong></td>
+<td><img alt="images" src="images/q_27000.gif"/></td>
+<td>Model is stable, but processing is very slow</td>
+<td>1</td>
+<td>1</td>
+<td>1967</td>
+<td>27,000 (Processed in 24 hours)</td>
 </tr>
 </tbody>
 </table>
+<p>In summary, it is worth noting that the PPO agent made it the farthest. Althought the heuristic agent beat the first level, it did so without any reinforcement learning and only after taking a few deaths. Additionally, the Q-Learning agent made it particularly far in only 27,000 training episodes. Given enough iterations, I believe this agent would out-perform the PPO agent, although the processing time is a great hinderance to this.</p>
 </div>
 </div>
 </div>
@@ -8958,10 +9018,13 @@ Max Stage: 2
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<p><em>Conclusion, discussion, reflection, or suggestions for future improvements or future ideas.</em></p>
-<ol start="6">
-<li>Does it include discussion (what went well or not and why), and suggestions for improvements or future work? (5)</li>
-</ol>
+<p>In the end the heuristic created a strong strategy for simplifying the model's action choices, and creating a set of custom actions to either run right, or run and jump right encouraged the model to control Mario similar to a real player, jumping over most obstacles and minimizing the chances for death by running into enemies on the ground.</p>
+<p>Utilizing the custom reward function to encourage higher jumping and creating the simplified action list allowed both the PPO and Q-Learning agents to progress much farther than initially, and ensured stable learning that balanced both exploration and exploitation. Prior to these revisions, the model continuously exploited the reward mechanics to a point that it was not progressing further into the game and would eventually converge on a policy that either stayed in one position (either stuck at a pipe or jumping over and over) or killing itself to the firts goomba repeatedly.</p>
+<p>The main difference in performance between the Q-Learning and PPO models was mainly down to processing complexity. The PPO model was simpler and was able to perform hundreds of thousands of training episodes in only a few hours, whereas the Q-Learning algorithm, while it was significantly more stable, took over 24 hours just to get to 50,000 training episodes. The benefits of the processing speed of Stable Baseline3's PPO library enabled me to see progress quickly and make adjustments as needed, whereas it was relatively difficult to figure out any problems with the Q-Learning algorithm until a considerable amount of time was wasted.</p>
+<p>Because of the processing drawbacks, I was forced to consider further optimizations to improve performance which I could use to speed up the SB3 PPO model even more.</p>
+<p>At the same time, I was able to implement the improvements made to the reward and action choices of the PPO model to further improve the Q-Learning model. Insights which would have taken days and weeks to gather if I simply used the Q-Learning agent alone.</p>
+<p>It would be interesting to see how much the Q-Learning agent would improve given the same number of iterations the PPO model was able to make and compare them side by side. Additionally, I have seen other projects, like <a href="https://github.com/yumouwei/super-mario-bros-reinforcement-learning">this one by William Wei</a>, that use custom wrappers that are able to read and interpret the memory of the Super Mario Bros environment to be able to have even more information for the agent to utilize, determining the locations of enemies, blocks, pits, etc (Yumouwei, 2023).</p>
+<p>Given additional time, I like to see how well the agent would be able to improve with this information. This in combination with using random stage selection could also allow the model to be able to create a more generalized optimal policy that could assist in beating many levels of the game. As it is, my model seems to be making progress very slowly as it learns from trial and error as opposed to dynamically "seeing" information in the game state and choosing actions accordingly.</p>
 </div>
 </div>
 </div>
@@ -8973,8 +9036,7 @@ Max Stage: 2
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
 <p><a id="references"></a></p>
-<h2 id="References">References<a class="anchor-link" href="#References">¶</a></h2><p><em>Reference: Please include all relevant links (git, video, etc)</em></p>
-<ol start="7">
+<h2 id="References">References<a class="anchor-link" href="#References">¶</a></h2><ol start="7">
 <li>Does it include all deliverables (3)<ul>
 <li>git with codes or notebooks</li>
 <li>writeup (you can consider notebook as a writeup if the notebook contains all needed contents and explanation)</li>
@@ -8983,24 +9045,12 @@ Max Stage: 2
 </ul>
 </li>
 </ol>
-<p>Kauten, C. (2018). Super Mario Bros for OpenAI Gym. GitHub. Retrieved from <a href="https://github.com/Kautenja/gym-super-mario-bros">https://github.com/Kautenja/gym-super-mario-bros</a></p>
+<p>Gavenski, Nathan. (2023). Comment on issue #128 in Kautenja/gym-super-mario-bros repository. GitHub. Retrieved from <a href="https://github.com/Kautenja/gym-super-mario-bros/issues/128#issuecomment-1954019091">https://github.com/Kautenja/gym-super-mario-bros/issues/128#issuecomment-1954019091</a></p>
+<p>Kauten, Christian. (2018). Super Mario Bros for OpenAI Gym. GitHub. Retrieved from <a href="https://github.com/Kautenja/gym-super-mario-bros">https://github.com/Kautenja/gym-super-mario-bros</a></p>
+<p>Kundu, Sourish. (2023). Super Mario Bros Reinforcement Learning. GitHub, 2023, <a href="https://github.com/Sourish07/Super-Mario-Bros-RL">https://github.com/Sourish07/Super-Mario-Bros-RL</a>.</p>
+<p>Kundu, Sourish. (2023). Train AI to beat Super Mario Bros! || Reinforcement learning completely from scratch [Video]. YouTube. <a href="https://www.youtube.com/watch?v=_gmQZToTMac">https://www.youtube.com/watch?v=_gmQZToTMac</a></p>
 <p>Nintendo. (1985). Super Mario Bros. Instruction Manual. Nintendo of America Inc. Retrieved from [<a href="https://www.nintendo.co.jp/clv/manuals/en/pdf/CLV-P-NAAAE.pdf">https://www.nintendo.co.jp/clv/manuals/en/pdf/CLV-P-NAAAE.pdf</a>]</p>
-<p>NathanGavenski. (2023). Comment on issue #128 in Kautenja/gym-super-mario-bros repository. GitHub. Retrieved from <a href="https://github.com/Kautenja/gym-super-mario-bros/issues/128#issuecomment-1954019091">https://github.com/Kautenja/gym-super-mario-bros/issues/128#issuecomment-1954019091</a></p>
-<p>Kundu, S. (2023, October 2). Train AI to beat Super Mario Bros! || Reinforcement learning completely from scratch [Video]. YouTube. <a href="https://www.youtube.com/watch?v=_gmQZToTMac">https://www.youtube.com/watch?v=_gmQZToTMac</a></p>
-</div>
-</div>
-</div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=d8b94f9b-15f1-48eb-8b0d-8584b7a585a6">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div>
-<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-<div class="cm-editor cm-s-jupyter">
-<div class="highlight hl-ipython3"><pre><span></span> 
-</pre></div>
-</div>
+<p>Wei, William. (2023). Super Mario Bros Reinforcement Learning [Source code]. GitHub. <a href="https://github.com/yumouwei/super-mario-bros-reinforcement-learning">https://github.com/yumouwei/super-mario-bros-reinforcement-learning</a></p>
 </div>
 </div>
 </div>
