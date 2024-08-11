@@ -14635,7 +14635,7 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
 <p><a id='short-overview'></a></p>
-<h2 id="Short-Overview">Short Overview<a class="anchor-link" href="#Short-Overview">&#182;</a></h2><p>For my project, I chose to teach a learning model to play the original Super Mario Bros. game for the NES. I utilized a library created by Christian Kauten called gym-super-mario-bros, which provides an OpenAI Gym environment using the nes-py emulator <a href="#references">(Kauten, 2018)</a>. The challenge is to beat as many levels as possible in the original Mario game for NES with the following rules of the game.</p>
+<h2 id="Short-Overview">Short Overview<a class="anchor-link" href="#Short-Overview">&#182;</a></h2><p>For my project, I chose to teach a learning model to play the original Super Mario Bros. game for the NES. I utilized a library created by Christian Kauten called gym-super-mario-bros, which provides an OpenAI Gym environment using the nes-py emulator <a href="#references">(Kauten, 2018)</a>. The challenge is to beat as many levels as possible in the original Mario game for NES with the given rules of the game.</p>
 <p>To start, I will create a random agent (choosing actions randomly), then a heuristic agent that chooses actions based on a given strategy, and finally two reinforcement learning models to compare against each other: a proximal policy optimization (PPO) model and a Q-Learning model.</p>
 <p>The main difference between PPO and Q-Learning will be in their approach to policy optimization and exploration. PPO is a policy-based method that directly optimizes actions, mapping the best action to take for any given game state. Q-Learning is value-based, focusing on learning state-action values. Because of this, PPO is better at determining continuous action spaces, whereas Q-Learning is better suited for discrete action spaces. Since Super Mario Bros. would represent a continuous action space with fluid movement between frames, I would anticipate the PPO model to be more effective, but it will be interesting to compare the results of each.</p>
 <p>The goal will be to create stable learning environments for both of these models and see how each agent performs in the game environment.</p>
@@ -14780,7 +14780,7 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
 </ol>
 <p>( r = v + c + d )</p>
 <p>The reward is clipped into the range ([-15, 15]).</p>
-<p>In addition to the gym-super-mario-bros library, nes-py is required in order to emulate the NES in Python. Huge thanks to Kautenja for creating the environment and making this project possible! (Kauten, 2018)</p>
+<p>In addition to the gym-super-mario-bros library, nes-py is required in order to emulate the NES in Python. Huge thanks to Christian Kauten for creating the environment and making this project possible! <a href="#references">(Kauten, 2018)</a></p>
 
 </div>
 </div>
