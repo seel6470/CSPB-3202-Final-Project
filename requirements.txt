@@ -1,4 +1,4 @@
-gym==0.24.0
+gym==0.26.2
 gym_super_mario_bros==7.4.0
 gymnasium==0.29.1
 nes_py==8.2.1
