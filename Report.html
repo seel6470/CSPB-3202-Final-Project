@@ -15443,12 +15443,12 @@ ActorCriticCnnPolicy(
 <span class="n">env</span><span class="o">.</span><span class="n">reset</span> <span class="o">=</span> <span class="n">gymnasium_reset</span><span class="o">.</span><span class="fm">__get__</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">JoypadSpace</span><span class="p">)</span>
 
 <span class="n">env</span> <span class="o">=</span> <span class="n">StepAPICompatibility</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">output_truncation_bool</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="c1">#env = CustStepReward(env)</span>
+<span class="n">env</span> <span class="o">=</span> <span class="n">CustStepReward</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
 
-<span class="c1">#env = SkipFrame(env, skip=4)</span>
-<span class="c1">#env = ResizeObservation(env, shape=84) # reduce size of frame image</span>
-<span class="c1">#env = GrayScaleObservation(env) # create grayscale images</span>
-<span class="c1">#env = FrameStack(env, num_stack=8, lz4_compress=True) # stack frames</span>
+<span class="n">env</span> <span class="o">=</span> <span class="n">SkipFrame</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">skip</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+<span class="n">env</span> <span class="o">=</span> <span class="n">ResizeObservation</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="mi">84</span><span class="p">)</span> <span class="c1"># reduce size of frame image</span>
+<span class="n">env</span> <span class="o">=</span> <span class="n">GrayScaleObservation</span><span class="p">(</span><span class="n">env</span><span class="p">)</span> <span class="c1"># create grayscale images</span>
+<span class="n">env</span> <span class="o">=</span> <span class="n">FrameStack</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">num_stack</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">lz4_compress</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="c1"># stack frames</span>
 
 <span class="c1"># uncomment to load saved trained model</span>
 <span class="c1"># model = PPO.load(os.path.join(&quot;trained_agents&quot;,&quot;ppo&quot;,&quot;ppo_mario_25000_steps.zip&quot;))</span>
