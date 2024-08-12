@@ -24,6 +24,7 @@ SAVE_INTERVAL = 1000
 NUM_OF_EPISODES = 100000
 BUFFER_SIZE=500000
 START = 8000
+AGENT_NAME = "final_q_agent.pt"
 
 
 class SkipFrame(Wrapper):
@@ -294,33 +295,33 @@ env = JoypadSpace(env.env, CUSTOM_ACTIONS)
 env = apply_wrappers(env)
 
 agent = Agent(input_dims=env.observation_space.shape, num_actions=env.action_space.n)
-agent.load_model(os.path.join("trained_agents","q_learning","8000_q_agent.pt"))
 
-def print_progress(cur,end, bar_length=40):
-    progress = cur / end
-    block = int(round(bar_length * progress))
-    text = f"\rCurrently processing episode {cur}/{end} [{'#' * block + '-' * (bar_length - block)}] {progress * 100:.2f}%"
-    print(text, end='', flush=True)
+agent.load_model(os.path.join("trained_agents","q_learning",AGENT_NAME))
 
-i = START
+max_x = 0
+max_world = 0
+max_stage = 0
 
-while i in range(NUM_OF_EPISODES):
-    print_progress(i+1,NUM_OF_EPISODES)
-    done = False
-    state = env.reset()
-    while not done:
-        a = agent.choose_action(state)
-        new_state, reward, done, info  = env.step(a)
-        
-        agent.store_in_memory(state, a, reward, new_state, done)
-        agent.learn()
+state = env.reset()
+for step in range(5000):
+    action = agent.choose_action(state)
+    state, reward, done, info = env.step(action)
+    if info['world'] > max_world:
+        max_world = info['world']
+        max_x = 0
+        max_stage = 1
+    elif info['stage'] > max_stage:
+        max_stage = info['stage']
+        max_x = 0
+    elif info['world'] == max_world and info['stage'] == max_stage and info['x_pos'] > max_x:
+        max_x = info['x_pos']
+    env.render()
+    time.sleep(0.02)
+    if done:
+        state = env.reset()
 
-        state = new_state
-
-        if (i + 1) % SAVE_INTERVAL == 0:
-            agent.save_model(os.path.join("trained_agents","q_learning",str(i + 1) + "_q_agent.pt"))
-    i += 1
-
-agent.save_model(os.path.join("trained_agents","q_learning","final_q_agent.pt"))
+print(f"Max X: {max_x}")
+print(f"Max World: {max_world}")
+print(f"Max Stage: {max_stage}")
 
 env.close()

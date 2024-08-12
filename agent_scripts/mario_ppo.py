@@ -19,8 +19,6 @@ steps = env._max_episode_steps
 # Set the Joypad wrapper
 env = JoypadSpace(env.env, SIMPLE_MOVEMENT)
 # Overwrite the old reset to accept seeds and options args
-def gymnasium_reset(self, **kwargs):
-    return self.env.reset(), {}
 env.reset = gymnasium_reset.__get__(env, JoypadSpace)
 env = StepAPICompatibility(env, output_truncation_bool=True)
 
@@ -35,10 +33,6 @@ model = PPO(
     clip_range=0.2,   # helps in limiting updates for stable training
     ent_coef=0.03     # use entropy to encourage exploration
 )
-
-print("####################",model.policy)
-
-sys.exit()
 
 # Define evaluation and checkpoint callbacks
 eval_callback = EvalCallback(env, best_model_save_path='./logs/', log_path='./trained_agents/logs/', eval_freq=500, deterministic=True, render=False)
