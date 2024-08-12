@@ -14570,6 +14570,7 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
                     }
                 },
                 tex2jax: {
+                    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
                     inlineMath: [ ['$','$'], ["\\(","\\)"] ],
                     displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
                     processEscapes: true,
@@ -14597,19 +14598,7 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<p>GitHub Repository for this project can be found at <a href="https://github.com/seel6470/CSPB-3202-Final-Project">https://github.com/seel6470/CSPB-3202-Final-Project</a></p>
-
-</div>
-</div>
-</div>
-</div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
-<div class="jp-Cell-inputWrapper">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<h1 id="Beating-Super-Mario-Bros-1-1-With-Reinforcement-Learning">Beating Super Mario Bros 1-1 With Reinforcement Learning<a class="anchor-link" href="#Beating-Super-Mario-Bros-1-1-With-Reinforcement-Learning">&#182;</a></h1><ol type="I">
+<h1 id="Beating-Super-Mario-Bros-(Level-1-1)-With-Reinforcement-Learning">Beating Super Mario Bros (Level 1-1) With Reinforcement Learning<a class="anchor-link" href="#Beating-Super-Mario-Bros-(Level-1-1)-With-Reinforcement-Learning">&#182;</a></h1><h3 id="Seth-Ely---CSPB-3202-Summer-2024">Seth Ely - CSPB 3202 Summer 2024<a class="anchor-link" href="#Seth-Ely---CSPB-3202-Summer-2024">&#182;</a></h3><ol type="I">
 <li><a href='#short-overview'>Short Overview</a></li>
 <li><a href='#approach'>Approach</a>
   <ol type="A">
@@ -14634,12 +14623,26 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<p>GitHub Repository for this project can be found at <a href="https://github.com/seel6470/CSPB-3202-Final-Project">https://github.com/seel6470/CSPB-3202-Final-Project</a></p>
+
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
 <p><a id='short-overview'></a></p>
-<h2 id="Short-Overview">Short Overview<a class="anchor-link" href="#Short-Overview">&#182;</a></h2><p>For my project, I chose to teach a learning model to play the original Super Mario Bros. game for the NES. I utilized a library created by Christian Kauten called gym-super-mario-bros, which provides an OpenAI Gym environment using the nes-py emulator <a href="#references">(Kauten, 2018)</a>. The challenge is to beat as many levels as possible in the original Mario game for NES with the following rules of the game.</p>
-<p>To start, I will create a random agent (choosing actions randomly), then a heuristic agent that chooses actions based on a given strategy, and finally two reinforcement learning models to compare against each other: a proximal policy optimization (PPO) model and a Q-Learning model. The goal will be to create stable learning environments for both of these models and see how each agent performs in the game environment.</p>
+<h2 id="Short-Overview">Short Overview<a class="anchor-link" href="#Short-Overview">&#182;</a></h2><p>For my project, I chose to teach a learning model to play the original Super Mario Bros. game for the NES. I utilized a library created by Christian Kauten called gym-super-mario-bros, which provides an OpenAI Gym environment using the nes-py emulator <a href="#references">(Kauten, 2018)</a>. The challenge is to beat as many levels as possible in the original Mario game for NES with the given rules of the game.</p>
+<p>To start, I will create a random agent (choosing actions randomly), then a heuristic agent that chooses actions based on a given strategy, and finally two reinforcement learning models to compare against each other: a proximal policy optimization (PPO) model and a Q-Learning model.</p>
+<p>The main difference between PPO and Q-Learning will be in their approach to policy optimization and exploration. PPO is a policy-based method that directly optimizes actions, mapping the best action to take for any given game state. Q-Learning is value-based, focusing on learning state-action values. Because of this, PPO is better at determining continuous action spaces, whereas Q-Learning is better suited for discrete action spaces. Since Super Mario Bros. would represent a continuous action space with fluid movement between frames, I would anticipate the PPO model to be more effective, but it will be interesting to compare the results of each.</p>
+<p>The goal will be to create stable learning environments for both of these models and see how each agent performs in the game environment.</p>
 <h3 id="Rules-of-the-Game">Rules of the Game<a class="anchor-link" href="#Rules-of-the-Game">&#182;</a></h3><p>The goal of the game is to avoid enemies and pits to reach the end of each level. One hit and Mario loses a life, starting over from the nearest checkpoint. Power-ups provide Mario an additional hit. The following page from the original game manual outlines the inputs Mario receives for the game:</p>
 <p><img src="https://raw.githubusercontent.com/seel6470/CSPB-3202-Final-Project/main/images/controls.jpg" alt="image" /></p>
-<p>Nintendo. (1985). Super Mario Bros. Instruction Manual. Nintendo of America Inc. Retrieved from [https://www.nintendo.co.jp/clv/manuals/en/pdf/CLV-P-NAAAE.pdf]</p>
+<p>Nintendo. (1985). Super Mario Bros. Instruction Manual. Nintendo of America Inc. Retrieved from <a href="https://www.nintendo.co.jp/clv/manuals/en/pdf/CLV-P-NAAAE.pdf">https://www.nintendo.co.jp/clv/manuals/en/pdf/CLV-P-NAAAE.pdf</a></p>
 <p>The game environment takes these controls and creates the following action lists that can be used within the environment wrapper:</p>
 <div class="highlight"><pre><span></span><span class="c1"># actions for the simple run right environment</span>
 <span class="n">RIGHT_ONLY</span> <span class="o">=</span> <span class="p">[</span>
@@ -14778,7 +14781,8 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
 </ol>
 <p>( r = v + c + d )</p>
 <p>The reward is clipped into the range ([-15, 15]).</p>
-<p>In addition to the gym-super-mario-bros library, nes-py is required in order to emulate the NES in Python. Huge thanks to Kautenja for creating the environment and making this project possible! (Kauten, 2018)</p>
+<p>Kauten, Christian. (2018). Super Mario Bros for OpenAI Gym. GitHub. Retrieved from <a href="https://github.com/Kautenja/gym-super-mario-bros">https://github.com/Kautenja/gym-super-mario-bros</a></p>
+<p>In addition to the gym-super-mario-bros library, nes-py is required in order to emulate the NES in Python. Huge thanks to Christian Kauten for creating the environment and making this project possible! <a href="#references">(Kauten, 2018)</a></p>
 
 </div>
 </div>
@@ -14797,12 +14801,12 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
 <div class="jp-Cell-inputWrapper">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[2]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[6]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">gym</span>
@@ -14833,6 +14837,28 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
      </div>
 </div>
 </div>
+</div>
+
+<div class="jp-Cell-outputWrapper">
+<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+</div>
+
+
+<div class="jp-OutputArea jp-Cell-outputArea">
+<div class="jp-OutputArea-child">
+    
+    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+
+
+<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr">
+<pre>/opt/conda/lib/python3.10/site-packages/gym/envs/registration.py:555: UserWarning: <span class="ansi-yellow-fg">WARN: The environment SuperMarioBros-v0 is out of date. You should consider upgrading to version `v3`.</span>
+  logger.warn(
+</pre>
+</div>
+</div>
+
+</div>
+
 </div>
 
 </div>
@@ -14961,12 +14987,12 @@ Max Stage: 1
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
 <div class="jp-Cell-inputWrapper">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[7]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Create the Super Mario Bros. environment</span>
@@ -14988,9 +15014,7 @@ Max Stage: 1
 <span class="c1"># create global variables for inputs</span>
 <span class="n">done</span> <span class="o">=</span> <span class="kc">True</span>
 <span class="n">going_up</span> <span class="o">=</span> <span class="kc">False</span>
-<span class="n">prev_y</span> <span class="o">=</span> <span class="kc">None</span>
-<span class="n">min_y</span> <span class="o">=</span> <span class="mi">0</span>
-<span class="n">max_y</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">prev_y</span> <span class="o">=</span> <span class="mi">0</span>
 
 <span class="n">max_x</span> <span class="o">=</span> <span class="mi">0</span>
 <span class="n">max_world</span> <span class="o">=</span> <span class="mi">0</span>
@@ -14999,21 +15023,22 @@ Max Stage: 1
 <span class="k">for</span> <span class="n">step</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1700</span><span class="p">):</span>
     <span class="k">if</span> <span class="n">done</span><span class="p">:</span>
         <span class="n">state</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
-        <span class="n">prev_y</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="n">hold_jump</span> <span class="o">=</span> <span class="kc">False</span>
+    
+    <span class="n">jump</span> <span class="o">=</span> <span class="n">SIMPLE_MOVEMENT</span><span class="o">.</span><span class="n">index</span><span class="p">([</span><span class="s1">&#39;right&#39;</span><span class="p">,</span> <span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">])</span>
+    <span class="n">run</span> <span class="o">=</span> <span class="n">SIMPLE_MOVEMENT</span><span class="o">.</span><span class="n">index</span><span class="p">([</span><span class="s1">&#39;right&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">])</span>
     
     <span class="c1"># if Mario is on flat groun</span>
     <span class="c1"># or in the process of rising from previous jump</span>
     <span class="c1"># will continue to hold A to perform the maximum jump</span>
-    <span class="n">action</span> <span class="o">=</span> <span class="n">SIMPLE_MOVEMENT</span><span class="o">.</span><span class="n">index</span><span class="p">([</span><span class="s1">&#39;right&#39;</span><span class="p">,</span> <span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">])</span> <span class="k">if</span> <span class="n">going_up</span> <span class="k">else</span> <span class="n">SIMPLE_MOVEMENT</span><span class="o">.</span><span class="n">index</span><span class="p">([</span><span class="s1">&#39;right&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">])</span>
+    <span class="n">action</span> <span class="o">=</span> <span class="n">jump</span> <span class="k">if</span> <span class="n">going_up</span> <span class="k">else</span> <span class="n">run</span>
     <span class="n">state</span><span class="p">,</span> <span class="n">reward</span><span class="p">,</span> <span class="n">done</span><span class="p">,</span> <span class="n">truncated</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">action</span><span class="p">)</span>
-
+    
+    
     <span class="c1"># set going_up to true if Mario is not descending</span>
-    <span class="k">if</span> <span class="n">prev_y</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">info</span><span class="p">[</span><span class="s1">&#39;y_pos&#39;</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">prev_y</span><span class="p">:</span>
-            <span class="n">going_up</span> <span class="o">=</span> <span class="kc">True</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">going_up</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="k">if</span> <span class="n">info</span><span class="p">[</span><span class="s1">&#39;y_pos&#39;</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">prev_y</span><span class="p">:</span>
+        <span class="n">going_up</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">going_up</span> <span class="o">=</span> <span class="kc">False</span>
 
     <span class="c1"># capture current y position to compare for next state</span>
     <span class="n">prev_y</span> <span class="o">=</span> <span class="n">info</span><span class="p">[</span><span class="s1">&#39;y_pos&#39;</span><span class="p">]</span>
@@ -15028,8 +15053,6 @@ Max Stage: 1
     <span class="k">elif</span> <span class="n">info</span><span class="p">[</span><span class="s1">&#39;world&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">max_world</span> <span class="ow">and</span> <span class="n">info</span><span class="p">[</span><span class="s1">&#39;stage&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">max_stage</span> <span class="ow">and</span> <span class="n">info</span><span class="p">[</span><span class="s1">&#39;x_pos&#39;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">max_x</span><span class="p">:</span>
         <span class="n">max_x</span> <span class="o">=</span> <span class="n">info</span><span class="p">[</span><span class="s1">&#39;x_pos&#39;</span><span class="p">]</span>
 
-    <span class="k">if</span> <span class="n">done</span> <span class="ow">or</span> <span class="n">truncated</span><span class="p">:</span>
-        <span class="n">done</span> <span class="o">=</span> <span class="kc">True</span>
     <span class="n">env</span><span class="o">.</span><span class="n">render</span><span class="p">()</span>
     <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.01</span><span class="p">)</span>  <span class="c1"># Add a delay of 0.01 seconds between frames to slow down render</span>
 
@@ -15043,29 +15066,6 @@ Max Stage: 1
      </div>
 </div>
 </div>
-</div>
-
-<div class="jp-Cell-outputWrapper">
-<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
-</div>
-
-
-<div class="jp-OutputArea jp-Cell-outputArea">
-<div class="jp-OutputArea-child">
-    
-    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-
-
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
-<pre>Max X: 199
-Max World: 1
-Max Stage: 2
-</pre>
-</div>
-</div>
-
-</div>
-
 </div>
 
 </div>
@@ -15101,7 +15101,7 @@ Max Stage: 2
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<p>Let's actually have an agent that learns, rather than blindly jumping. The initial model of choice will be a Proximal Policy Optimization (PPO) agent. This type of reinforcement learning model learns a policy that directly maps an approximation of the optimal action for any given state to exploit  to approximate the optimal action for any given state to maximize the reward returned over time.</p>
+<p>The initial model of choice will be a Proximal Policy Optimization (PPO) agent. This type of reinforcement learning model learns a policy that directly maps an approximation of the optimal action for any given state to exploit  to approximate the optimal action for any given state to maximize the reward returned over time.</p>
 <p>It does this by using gradient ascent to maximize the policy using the clipped objective function, which helps avoid making drastic weight updates:</p>
 <p>$L(\theta) = \mathbb{E} \left[ \min \left( \frac{\pi_{\theta}(a|s)}{\pi_{\theta_{\text{old}}}(a|s)} \hat{A}, \text{clip}\left(\frac{\pi_{\theta}(a|s)}{\pi_{\theta_{\text{old}}}(a|s)}, 1 - \epsilon, 1 + \epsilon \right) \hat{A} \right) \right]$</p>
 <p>This function seeks to optimize the parameters ($\theta$) of the neural network by evaluating the expected value ($\mathbb{E}$) of the minimum between the following two values:</p>
@@ -15217,12 +15217,12 @@ $$\text{clip}\left(\frac{\pi_{\theta}(a|s)}{\pi_{\theta_{\text{old}}}(a|s)}, 1 -
 <span class="n">env</span><span class="o">.</span><span class="n">reset</span> <span class="o">=</span> <span class="n">gymnasium_reset</span><span class="o">.</span><span class="fm">__get__</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">JoypadSpace</span><span class="p">)</span>
 
 <span class="n">env</span> <span class="o">=</span> <span class="n">StepAPICompatibility</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">output_truncation_bool</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="c1">#env = CustStepReward(env)</span>
+<span class="n">env</span> <span class="o">=</span> <span class="n">CustStepReward</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
 
-<span class="c1">#env = SkipFrame(env, skip=4)</span>
-<span class="c1">#env = ResizeObservation(env, shape=84) # reduce size of frame image</span>
-<span class="c1">#env = GrayScaleObservation(env) # create grayscale images</span>
-<span class="c1">#env = FrameStack(env, num_stack=8, lz4_compress=True) # stack frames</span>
+<span class="n">env</span> <span class="o">=</span> <span class="n">SkipFrame</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">skip</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+<span class="n">env</span> <span class="o">=</span> <span class="n">ResizeObservation</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="mi">84</span><span class="p">)</span> <span class="c1"># reduce size of frame image</span>
+<span class="n">env</span> <span class="o">=</span> <span class="n">GrayScaleObservation</span><span class="p">(</span><span class="n">env</span><span class="p">)</span> <span class="c1"># create grayscale images</span>
+<span class="n">env</span> <span class="o">=</span> <span class="n">FrameStack</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">num_stack</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">lz4_compress</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="c1"># stack frames</span>
 
 <span class="n">model</span> <span class="o">=</span> <span class="n">PPO</span><span class="p">(</span>
     <span class="s1">&#39;CnnPolicy&#39;</span><span class="p">,</span>      <span class="c1"># Use a convolutional neural network</span>
@@ -15267,7 +15267,7 @@ $$\text{clip}\left(\frac{\pi_{\theta}(a|s)}{\pi_{\theta_{\text{old}}}(a|s)}, 1 -
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<p>To optimize the learning process, I decided to use several wrappers for optimization. The idea for these optimizations came from a video by Sourish Kundu I used as the basis for the Q-Learning model implemented later in this project <a href="#references">(Kundu, 2023)</a>. The following additions implemented above along with configuring Stable Baselines to use the GPU sped up the learning process quite a bit and allowed me to train the model for 400,000 episodes over the course of only a few hours.</p>
+<p>To optimize the learning process, I decided to use several wrappers. The idea for these optimizations came from a video by Sourish Kundu I used as the basis for the Q-Learning model implemented later in this project <a href="#references">(Kundu, 2023)</a>. The following additions implemented above along with configuring Stable Baselines to use the GPU sped up the learning process quite a bit and allowed me to train the model for 600,000 episodes over the course of only a few hours.</p>
 <p>The first optimization is to create a custom wrapper that skips every four frames. Since the NES Mario Bros runs at about 60 fps, not much changes in the game state for each frame and the agent will choose an action and repeat the action for every four frames.</p>
 <p>Additional optimizations included downgrading from color RGB pixel values to gray scale values, reducing the image size, and stacking 8 frames at a time. The framestacking, when combined with the frame skipping, reduces the processing complexity of the model and at the same time allow it to interpret more meaningful game state changes than it would otherwise evaluate from every individual frame.</p>
 <p>The actual architecture of the model uses a convolutional neural network as seen from printing <code>model.policy</code>:</p>
@@ -15444,12 +15444,12 @@ ActorCriticCnnPolicy(
 <span class="n">env</span><span class="o">.</span><span class="n">reset</span> <span class="o">=</span> <span class="n">gymnasium_reset</span><span class="o">.</span><span class="fm">__get__</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">JoypadSpace</span><span class="p">)</span>
 
 <span class="n">env</span> <span class="o">=</span> <span class="n">StepAPICompatibility</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">output_truncation_bool</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="c1">#env = CustStepReward(env)</span>
+<span class="n">env</span> <span class="o">=</span> <span class="n">CustStepReward</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
 
-<span class="c1">#env = SkipFrame(env, skip=4)</span>
-<span class="c1">#env = ResizeObservation(env, shape=84) # reduce size of frame image</span>
-<span class="c1">#env = GrayScaleObservation(env) # create grayscale images</span>
-<span class="c1">#env = FrameStack(env, num_stack=8, lz4_compress=True) # stack frames</span>
+<span class="n">env</span> <span class="o">=</span> <span class="n">SkipFrame</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">skip</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+<span class="n">env</span> <span class="o">=</span> <span class="n">ResizeObservation</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="mi">84</span><span class="p">)</span> <span class="c1"># reduce size of frame image</span>
+<span class="n">env</span> <span class="o">=</span> <span class="n">GrayScaleObservation</span><span class="p">(</span><span class="n">env</span><span class="p">)</span> <span class="c1"># create grayscale images</span>
+<span class="n">env</span> <span class="o">=</span> <span class="n">FrameStack</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">num_stack</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">lz4_compress</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="c1"># stack frames</span>
 
 <span class="c1"># uncomment to load saved trained model</span>
 <span class="c1"># model = PPO.load(os.path.join(&quot;trained_agents&quot;,&quot;ppo&quot;,&quot;ppo_mario_25000_steps.zip&quot;))</span>
@@ -15497,13 +15497,12 @@ ActorCriticCnnPolicy(
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
 <p><img src="https://raw.githubusercontent.com/seel6470/CSPB-3202-Final-Project/main/images/initial_ppo.gif" alt="image" /></p>
-<p>With the default PPO model values, the agent is unable to clear the pipe at the 595 X coordinate. I allowed the agent to train for 100,000 episodes hoping it would figure out that keeping the A button held down would lead to a higher jump, allowing it to continue to the right. Unfortunately, after 100,000 iterations, the model instead runs directly into the first goomba over and over.</p>
+<p>With the default PPO model values, the agent is again unable to clear the pipe at the 595 X coordinate, similar to the random agent. I allowed the agent to train for 100,000 episodes hoping it would figure out that keeping the A button held down would lead to a higher jump, allowing it to continue to the right. Unfortunately, after 100,000 iterations, the model instead runs directly into the first goomba over and over.</p>
 <p><img src="https://raw.githubusercontent.com/seel6470/CSPB-3202-Final-Project/main/images/goomba_death.gif" alt="image" /></p>
 <p>I attempted to fine tune the learning rate using a scheduler, fine tuning the gamma and clip values, as well as included an entropy coefficient to encourage exploration to no avail. Even with a large entropy coefficient, the model was not able to get over the pipe by chance. In retrospect, this is consistent with the behavior with our random agent, as the chances of stringing together several A button presses while also holding right for forward momentum could be rather unlikely. Even with the addition of frame skipping, which causes the agent to perform an action for every four frames, the agent was unable to clear the pipe in any of the learning episodes.</p>
 <p><strong>Because of this, the agent always gets stuck at either the first or second pipe and accrues penalties for the clock ticking down with no forward progress, per the default reward structure. After 100,000 episodes, the agent seems to learn that in order to avoid this penalty, it is more optimal to run directly into the first goomba, receiving a smaller penalty from taking a death than the accrued penalty it receives from getting stuck at the pipe.</strong></p>
 <p>To counteract this, I added a new Gym environment wrapper that returns a new reward function. Learning from the heuristic agent, I believe Mario will both progress farther and avoid death more if he spends more time jumping. Because of this, I added a reward if Mario's change in Y-value is positive (meaning he is ascending). This should hopefully incentivize the agent to continuously press the A button and increase the chances that it is able to clear any tall pipes.</p>
-<p>Additionally, I chose to give a heavy penalty and terminate the episode when the agent dies, which should discourage the agent from exploiting any rewards it receives from taking an intentional death.</p>
-<p>Lastly, I added an incentive for the agent if the 'get_flag' bool is true, further incentivizing the agent to complete the level.</p>
+<p>Additionally, I chose to give a heavy penalty and terminate the episode when the agent dies, which should discourage the agent from exploiting any rewards it receives from taking an intentional death as well as added an incentive for the agent if the 'get_flag' bool is true, further incentivizing the agent to complete the level.</p>
 <p>Lastly, I normalized the returned reward based on the average reward of the episode in order to stabilize the learning process while I made adjustments:</p>
 <div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">CustStepReward</span><span class="p">(</span><span class="n">Wrapper</span><span class="p">):</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">env</span><span class="p">):</span>
@@ -15559,7 +15558,7 @@ ActorCriticCnnPolicy(
 <p>While this simplification may make it harder for the agent to avoid enemies, it is more in alignment with the heuristic agent we used as a baseline and should hopefully allow the agent to make better progress.</p>
 <p>With these revisions, the agent was able to complete the level and even get a bit farther after 600,000 training steps, without taking any deaths (per the harsh penalty implemented in the revised reward function).</p>
 <p><img src="https://raw.githubusercontent.com/seel6470/CSPB-3202-Final-Project/main/images/ppo_final.gif" alt="image" /></p>
-<p>This reward function seems to work as intedned and the model learns with quite a bit of stability. Given enough iterations, I believe the model would continue to improve and progress farther into the game.</p>
+<p>This reward function seems to work as intended and the model learns with quite a bit of stability. Given enough iterations, I believe the model would continue to improve and progress farther into the game.</p>
 
 </div>
 </div>
@@ -15598,7 +15597,7 @@ ActorCriticCnnPolicy(
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
 <p>We can begin by creating the same wrappers as before. Initially, I used these wrappers for the Q-Learning model and applied them to the PPO model after the fact. We again skip 4 frames, rescale and reduce the images to gray scale while stacking 4 frames. I am also including the previous reward wrapper used in the PPO model before applying all these wrappers together in the function <code>apply_wrappers</code> that returns the environment utilizing all of the environment wrappers.</p>
-<p>One note is that the following algorithm requires gym version 0.24.0 as the returns of the reset function need to be a single value, as opposed to the tuple returned in later versions. Overriding the reset function does not work, as several of the necessary wraooers and Python modules are not compatible with the newer versions of gym. If you are attempting to run this cell, you will receive an error unless you run <code>pip install gym==0.24.0</code> first.</p>
+<p>One note is that the following algorithm requires gym version 0.24.0 as the returns of the reset function need to be a single value, as opposed to the tuple returned in later versions. Overriding the reset function does not work, as several of the necessary wrappers and Python modules are not compatible with the newer versions of gym. If you are attempting to run this cell, you will receive an error unless you run <code>pip install gym==0.24.0</code> first.</p>
 
 </div>
 </div>
@@ -15964,10 +15963,10 @@ ActorCriticCnnPolicy(
 <div class="highlight"><pre><span></span><span class="n">loss</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">loss</span><span class="p">(</span><span class="n">predicted_q_values</span><span class="p">,</span> <span class="n">target_q_values</span><span class="p">)</span>
 </pre></div>
 <p>This is then minimized using backpropagation in</p>
-<div class="highlight"><pre><span></span><span class="n">loss</span><span class="o">.</span><span class="n">backward</span><span class="p">();</span> <span class="bp">self</span><span class="o">.</span><span class="n">optimizer</span><span class="o">.</span><span class="n">step</span><span class="p">()</span> <span class="ow">in</span> <span class="n">learn</span><span class="p">())</span><span class="err">`</span><span class="o">.</span>
+<div class="highlight"><pre><span></span><span class="n">loss</span><span class="o">.</span><span class="n">backward</span><span class="p">();</span> <span class="bp">self</span><span class="o">.</span><span class="n">optimizer</span><span class="o">.</span><span class="n">step</span><span class="p">()</span> <span class="ow">in</span> <span class="n">learn</span><span class="p">())</span>
 </pre></div>
 <p>The agent selects actions using an epsilon-greedy policy  as seen in the <code>choose_action()</code> function, where the epsilon value represents the probability the model chooses a random action, selecting the action with the highest Q-value the rest of the time. This epsilon value decays overtime as seen here:</p>
-<div class="highlight"><pre><span></span><span class="bp">self</span><span class="o">.</span><span class="n">epsilon</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">epsilon</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">eps_decay</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">eps_min</span><span class="err">`</span>
+<div class="highlight"><pre><span></span><span class="bp">self</span><span class="o">.</span><span class="n">epsilon</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">epsilon</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">eps_decay</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">eps_min</span>
 </pre></div>
 <p>To stabilize learning, the agent periodically synchronizes the target network with the online network <code>self.sync_networks()</code>, copying the weights from the online network to the target network after a certain number of steps.</p>
 <p>We now have everything we need to create the environment and run our reinforcement learning architecture:</p>
@@ -16172,10 +16171,10 @@ Max Stage: 1
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<p><img src="images/q_27000.gif" alt="image" /></p>
+<p><img src="https://raw.githubusercontent.com/seel6470/CSPB-3202-Final-Project/main/images/q_27000.gif" alt="image" /></p>
 <p>WIth only 27,000 training episodes, the Q Learning algorithm is able to take advantage of the height reward and is clearing the tall pipes and the first gap. Given enough iterations, I believe this algorithm would show similar, if not better results than our PPO algorithm. However, it took almost 24 hours to just get this number of iterations when I could get 20 times the number of episodes with the PPO algorithm.</p>
-<p>The main difference between PPO and Q-Learning, besides the processing time, is in their approach to policy optimization and exploration. PPO is a policy-based method that directly optimizes actions, mapping the best action to take for any given game state. Q-Learning is value-based, focusing on learning state-action values. Because of this, PPO is better at determining continuous action spaces, whereas Q-Learning is better suited for discrete action spaces. Limiting the number of chosen actions to only those that allow Mario to progress (right + B + A and right + B) may have worked well for both models given it creates a more discrete action space.</p>
-<p>My initial PPO algorithm was more prone to exploitation, which caused me to fine-tune the environment's reward value function and incorporate an entropy coefficient to encourage the agent to explore. In the same way, Q-Learning uses an epsilon greedy function that chooses a random action some of the time, taking the the action with the highest q-value the rest of the time. Using the more balanced reward function and set of actions taken from tuning the PPO algorithm assisted in stabilizing the Q-Learning model without as much trial and error. This was significant, especially given the the costly time to process the Q-Learning model as opposed to the PPO model.</p>
+<p>Since the main difference between PPO and Q-Learning, besides the processing time, has to do with how they handle discrete/continuous action spaces, limiting the number of chosen actions may have improved the Q-Learning algorithm. Even though the game-state is continuous and the controls for Mario can be very complex and nuanced, the limitation of either Running right (right + B) or jumping right (right + B + A) in addition to the frame skipping would have hopefully simplified the gamestate to be more similar to a discrete action state and likely improved the performance of the model.</p>
+<p>Additionally, initial PPO algorithm was more prone to exploitation, which caused me to fine-tune the environment's reward value function and incorporate an entropy coefficient to encourage the agent to explore. In the same way, Q-Learning uses an epsilon greedy function that chooses a random action some of the time, taking the the action with the highest q-value the rest of the time. Using the more balanced reward function and set of actions taken from tuning the PPO algorithm assisted in stabilizing the Q-Learning model without as much trial and error. This was significant, especially given the the costly time to process the Q-Learning model as opposed to the PPO model.</p>
 <p>In contrast, optimizations I found for the Q-Learning model to decrease computational complexity, such as frame skipping/stacking, image size reduction, grayscaling and not to mention configuring the modules to use the GPU, were able to be applied to the PPO model, making it even faster and allowing me to run even more iterations to easily fine tune the parameters and check the results.</p>
 
 </div>
@@ -16277,11 +16276,11 @@ Max Stage: 1
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
 <p>In the end the heuristic created a strong strategy for simplifying the model's action choices, and creating a set of custom actions to either run right, or run and jump right encouraged the model to control Mario similar to a real player, jumping over most obstacles and minimizing the chances for death by running into enemies on the ground.</p>
 <p>Utilizing the custom reward function to encourage higher jumping and creating the simplified action list allowed both the PPO and Q-Learning agents to progress much farther than initially, and ensured stable learning that balanced both exploration and exploitation. Prior to these revisions, the model continuously exploited the reward mechanics to a point that it was not progressing further into the game and would eventually converge on a policy that either stayed in one position (either stuck at a pipe or jumping over and over) or killing itself to the firts goomba repeatedly.</p>
-<p>The main difference in performance between the Q-Learning and PPO models was mainly down to processing complexity. The PPO model was simpler and was able to perform hundreds of thousands of training episodes in only a few hours, whereas the Q-Learning algorithm, while it was significantly more stable, took over 24 hours just to get to 50,000 training episodes. The benefits of the processing speed of Stable Baseline3's PPO library enabled me to see progress quickly and make adjustments as needed, whereas it was relatively difficult to figure out any problems with the Q-Learning algorithm until a considerable amount of time was wasted.</p>
+<p>The main difference in performance between the Q-Learning and PPO models was mainly down to processing complexity. The PPO model was simpler and was able to perform hundreds of thousands of training episodes in only a few hours, whereas the Q-Learning algorithm, while it was significantly more stable, took over 24 hours just to get to 27,000 training episodes. The benefits of the processing speed of Stable Baseline3's PPO library enabled me to see progress quickly and make adjustments as needed, whereas it was relatively difficult to figure out any problems with the Q-Learning algorithm until a considerable amount of time was wasted.</p>
 <p>Because of the processing drawbacks, I was forced to consider further optimizations to improve performance which I could use to speed up the SB3 PPO model even more.</p>
 <p>At the same time, I was able to implement the improvements made to the reward and action choices of the PPO model to further improve the Q-Learning model. Insights which would have taken days and weeks to gather if I simply used the Q-Learning agent alone.</p>
 <p>It would be interesting to see how much the Q-Learning agent would improve given the same number of iterations the PPO model was able to make and compare them side by side. Additionally, I have seen other projects, like <a href="https://github.com/yumouwei/super-mario-bros-reinforcement-learning">this one by William Wei</a>, that use custom wrappers that are able to read and interpret the memory of the Super Mario Bros environment to be able to have even more information for the agent to utilize, determining the locations of enemies, blocks, pits, etc <a href="#references">(Yumouwei, 2023)</a>.</p>
-<p>Given additional time, I like to see how well the agent would be able to improve with this information. This in combination with using random stage selection could also allow the model to be able to create a more generalized optimal policy that could assist in beating many levels of the game. As it is, my model seems to be making progress very slowly as it learns from trial and error as opposed to dynamically &quot;seeing&quot; information in the game state and choosing actions accordingly.</p>
+<p>Given additional time, I would like to see how well the agent would be able to improve with this information. This in combination with using random stage selection could also allow the model to be able to create a more generalized optimal policy that could assist in beating many levels of the game. As it is, my model seems to be making progress very slowly as it learns from trial and error as opposed to dynamically &quot;seeing&quot; information in the game state and choosing actions accordingly.</p>
 
 </div>
 </div>
@@ -16298,7 +16297,7 @@ Max Stage: 1
 <p>Kauten, Christian. (2018). Super Mario Bros for OpenAI Gym. GitHub. Retrieved from <a href="https://github.com/Kautenja/gym-super-mario-bros">https://github.com/Kautenja/gym-super-mario-bros</a></p>
 <p>Kundu, Sourish. (2023). Super Mario Bros Reinforcement Learning. GitHub, 2023, <a href="https://github.com/Sourish07/Super-Mario-Bros-RL">https://github.com/Sourish07/Super-Mario-Bros-RL</a>.</p>
 <p>Kundu, Sourish. (2023). Train AI to beat Super Mario Bros! || Reinforcement learning completely from scratch [Video]. YouTube. <a href="https://www.youtube.com/watch?v=_gmQZToTMac">https://www.youtube.com/watch?v=_gmQZToTMac</a></p>
-<p>Nintendo. (1985). Super Mario Bros. Instruction Manual. Nintendo of America Inc. Retrieved from [https://www.nintendo.co.jp/clv/manuals/en/pdf/CLV-P-NAAAE.pdf]</p>
+<p>Nintendo. (1985). Super Mario Bros. Instruction Manual. Nintendo of America Inc. Retrieved from <a href="https://www.nintendo.co.jp/clv/manuals/en/pdf/CLV-P-NAAAE.pdf">https://www.nintendo.co.jp/clv/manuals/en/pdf/CLV-P-NAAAE.pdf</a></p>
 <p>Nintendo. (1985). Super Mario Bros. [Video game]. Nintendo.</p>
 <p>Wei, William. (2023). Super Mario Bros Reinforcement Learning [Source code]. GitHub. <a href="https://github.com/yumouwei/super-mario-bros-reinforcement-learning">https://github.com/yumouwei/super-mario-bros-reinforcement-learning</a></p>
 
